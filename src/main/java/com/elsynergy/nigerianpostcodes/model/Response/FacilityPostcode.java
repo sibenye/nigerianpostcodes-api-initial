@@ -1,4 +1,4 @@
-package com.elsynergy.nigerianpostcodes.model;
+package com.elsynergy.nigerianpostcodes.model.Response;
 
 public class FacilityPostcode
 {

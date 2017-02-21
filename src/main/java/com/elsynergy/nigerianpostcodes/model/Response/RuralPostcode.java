@@ -1,34 +1,13 @@
-package com.elsynergy.nigerianpostcodes.model;
+package com.elsynergy.nigerianpostcodes.model.Response;
 
-/**
- *
- * @author silver.ibenye
- *
- */
-public class UrbanPostcode
+public class RuralPostcode
 {
-    private String street;
-    private String area;
     private String town;
+    private String lga;
     private String state;
+    private String district;
     private Integer postcode;
 
-    public String getStreet()
-    {
-        return this.street;
-    }
-    public void setStreet(final String street)
-    {
-        this.street = street;
-    }
-    public String getArea()
-    {
-        return this.area;
-    }
-    public void setArea(final String area)
-    {
-        this.area = area;
-    }
     public String getTown()
     {
         return this.town;
@@ -37,6 +16,14 @@ public class UrbanPostcode
     {
         this.town = town;
     }
+    public String getLga()
+    {
+        return this.lga;
+    }
+    public void setLga(final String lga)
+    {
+        this.lga = lga;
+    }
     public String getState()
     {
         return this.state;
@@ -44,6 +31,14 @@ public class UrbanPostcode
     public void setState(final String state)
     {
         this.state = state;
+    }
+    public String getDistrict()
+    {
+        return this.district;
+    }
+    public void setDistrict(final String district)
+    {
+        this.district = district;
     }
     public Integer getPostcode()
     {
