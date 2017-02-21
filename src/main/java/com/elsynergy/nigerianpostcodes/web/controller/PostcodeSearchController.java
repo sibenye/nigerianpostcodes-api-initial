@@ -1,5 +1,6 @@
 package com.elsynergy.nigerianpostcodes.web.controller;
 
+import com.elsynergy.nigerianpostcodes.model.Response.FacilityPostcode;
 import com.elsynergy.nigerianpostcodes.model.Response.RuralPostcode;
 import com.elsynergy.nigerianpostcodes.model.Response.UrbanPostcode;
 import com.elsynergy.nigerianpostcodes.service.PostcodeSearchService;
@@ -44,6 +45,17 @@ public class PostcodeSearchController
             ) throws ResourceNotFoundException
     {
         return this.postcodeSearchService.getUrbanPostcodes(state, town, street, area);
+    }
+
+    @ApiOperation(value = "Retrieve facility postcodes.")
+    @RequestMapping(method = RequestMethod.GET, value = "/facility/{state}")
+    public @ResponseBody List<FacilityPostcode> getFacilityPostcodes(
+            @Valid @PathVariable final String state,
+            @Valid @RequestParam  ( required = false ) final String lga,
+            @Valid @RequestParam ( required = false ) final String facility
+            ) throws ResourceNotFoundException
+    {
+        return this.postcodeSearchService.getFacilityPostcodes(state, lga, facility);
     }
 
 }

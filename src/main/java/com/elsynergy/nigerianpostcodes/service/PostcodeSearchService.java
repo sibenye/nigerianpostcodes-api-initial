@@ -1,5 +1,6 @@
 package com.elsynergy.nigerianpostcodes.service;
 
+import com.elsynergy.nigerianpostcodes.model.Response.FacilityPostcode;
 import com.elsynergy.nigerianpostcodes.model.Response.RuralPostcode;
 import com.elsynergy.nigerianpostcodes.model.Response.UrbanPostcode;
 import com.elsynergy.nigerianpostcodes.repo.PostcodeSearchRepo;
@@ -56,6 +57,17 @@ public class PostcodeSearchService
         }
 
         return urbanPostcodes;
+    }
+
+    public List<FacilityPostcode> getFacilityPostcodes(final String state, final String lga, final String facility) throws ResourceNotFoundException
+    {
+        final List<FacilityPostcode> facilityPostcodes = this.postcodeSearchRepo.getFacilityPostcodes(state, lga, facility);
+
+        if (facilityPostcodes.size() == 0) {
+            throw new ResourceNotFoundException("No postcodes found");
+        }
+
+        return facilityPostcodes;
     }
 
 }

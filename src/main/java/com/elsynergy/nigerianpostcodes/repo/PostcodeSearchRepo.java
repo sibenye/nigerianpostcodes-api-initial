@@ -1,5 +1,6 @@
 package com.elsynergy.nigerianpostcodes.repo;
 
+import com.elsynergy.nigerianpostcodes.model.Response.FacilityPostcode;
 import com.elsynergy.nigerianpostcodes.model.Response.RuralPostcode;
 import com.elsynergy.nigerianpostcodes.model.Response.UrbanPostcode;
 
@@ -71,25 +72,60 @@ public class PostcodeSearchRepo
                 ",? " +
                 ",?) ";
 
-        List<UrbanPostcode> ruralPostcodes = new ArrayList<>();
+        List<UrbanPostcode> urbanPostcodes = new ArrayList<>();
 
-        ruralPostcodes = this.jdbcTemplate.query(
+        urbanPostcodes = this.jdbcTemplate.query(
                 query,
                 new Object[]{state, town, street, area},
                 (rs, rowNum) -> {
-                    final UrbanPostcode ruralPostcode = new UrbanPostcode();
+                    final UrbanPostcode urbanPostcode = new UrbanPostcode();
 
-                    ruralPostcode.setState(rs.getString("state"));
-                    ruralPostcode.setTown(rs.getString("town"));
-                    ruralPostcode.setStreet(rs.getString("street"));
-                    ruralPostcode.setArea(rs.getString("area"));
-                    ruralPostcode.setPostcode(rs.getInt("postcode"));
+                    urbanPostcode.setState(rs.getString("state"));
+                    urbanPostcode.setTown(rs.getString("town"));
+                    urbanPostcode.setStreet(rs.getString("street"));
+                    urbanPostcode.setArea(rs.getString("area"));
+                    urbanPostcode.setPostcode(rs.getInt("postcode"));
 
-                    return ruralPostcode;
+                    return urbanPostcode;
                 }
             );
 
-        return ruralPostcodes;
+        return urbanPostcodes;
+    }
+
+    /**
+     * Retrieve facility postcodes.
+     *
+     * @param state
+     * @param lga
+     * @param facility
+     * @return List<FacilityPostcode>
+     */
+    public List<FacilityPostcode> getFacilityPostcodes(final String state, final String lga, final String facility)
+    {
+        final String query = "CALL get_facility_postcodes(" +
+                "? " +
+                ",? " +
+                ",?) ";
+
+        List<FacilityPostcode> facilityPostcodes = new ArrayList<>();
+
+        facilityPostcodes = this.jdbcTemplate.query(
+                query,
+                new Object[]{state, lga, facility},
+                (rs, rowNum) -> {
+                    final FacilityPostcode facilityPostcode = new FacilityPostcode();
+
+                    facilityPostcode.setState(rs.getString("state"));
+                    facilityPostcode.setLga(rs.getString("lga"));
+                    facilityPostcode.setFacility(rs.getString("facility"));
+                    facilityPostcode.setPostcode(rs.getInt("postcode"));
+
+                    return facilityPostcode;
+                }
+            );
+
+        return facilityPostcodes;
     }
 
 
