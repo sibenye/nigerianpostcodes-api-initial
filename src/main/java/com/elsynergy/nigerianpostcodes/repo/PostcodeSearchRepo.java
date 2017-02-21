@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+/**
+ * Postcode Search Repo.
+ *
+ * @author silver.ibenye
+ *
+ */
 public class PostcodeSearchRepo
 {
     @Autowired

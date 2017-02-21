@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+/**
+ * Postcode Search Service.
+ *
+ * @author silver.ibenye
+ *
+ */
 public class PostcodeSearchService
 {
     @Autowired
@@ -59,6 +65,15 @@ public class PostcodeSearchService
         return urbanPostcodes;
     }
 
+    /**
+     * Retrieve facility postcodes.
+     *
+     * @param state
+     * @param lga
+     * @param facility
+     * @return List<FacilityPostcode>
+     * @throws ResourceNotFoundException
+     */
     public List<FacilityPostcode> getFacilityPostcodes(final String state, final String lga, final String facility) throws ResourceNotFoundException
     {
         final List<FacilityPostcode> facilityPostcodes = this.postcodeSearchRepo.getFacilityPostcodes(state, lga, facility);

@@ -17,6 +17,12 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/postcodes")
+/**
+ * Postcode Search Controller.
+ *
+ * @author silver.ibenye
+ *
+ */
 public class PostcodeSearchController
 {
     @Autowired
