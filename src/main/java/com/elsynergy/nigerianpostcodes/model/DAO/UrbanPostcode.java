@@ -5,7 +5,7 @@ package com.elsynergy.nigerianpostcodes.model.DAO;
  * @author silver.ibenye
  *
  */
-public class UrbanPostcode
+public class UrbanPostcode extends BaseDAO
 {
     private String street;
     private String area;

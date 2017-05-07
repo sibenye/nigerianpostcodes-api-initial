@@ -5,7 +5,7 @@ package com.elsynergy.nigerianpostcodes.model.DAO;
  * @author silver.ibenye
  *
  */
-public class State
+public class State extends BaseDAO
 {
     private Integer stateId;
     private String state;

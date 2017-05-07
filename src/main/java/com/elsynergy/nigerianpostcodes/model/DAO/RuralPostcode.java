@@ -1,6 +1,6 @@
 package com.elsynergy.nigerianpostcodes.model.DAO;
 
-public class RuralPostcode
+public class RuralPostcode extends BaseDAO
 {
     private String town;
     private String lga;

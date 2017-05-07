@@ -1,6 +1,11 @@
 package com.elsynergy.nigerianpostcodes.model.DAO;
 
-public class FacilityPostcode
+/**
+ *
+ * @author silver.ibenye
+ *
+ */
+public class FacilityPostcode extends BaseDAO
 {
     private String facility;
     private String lga;
