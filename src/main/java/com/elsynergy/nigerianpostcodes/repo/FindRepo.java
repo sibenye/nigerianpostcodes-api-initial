@@ -1,8 +1,8 @@
 package com.elsynergy.nigerianpostcodes.repo;
 
-import com.elsynergy.nigerianpostcodes.model.Response.FacilityPostcode;
-import com.elsynergy.nigerianpostcodes.model.Response.RuralPostcode;
-import com.elsynergy.nigerianpostcodes.model.Response.UrbanPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.FacilityPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.RuralPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.UrbanPostcode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author silver.ibenye
  *
  */
-public class PostcodeSearchRepo
+public class FindRepo
 {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -26,13 +26,13 @@ public class PostcodeSearchRepo
     /**
      * Retrieve Rural postcodes.
      *
-     * @param state
-     * @param lga
+     * @param stateId
+     * @param lgaId
      * @param town
      * @param district
      * @return List<RuralPostcode>
      */
-    public List<RuralPostcode> getRuralPostcodes(final String state, final String lga, final String town, final String district)
+    public List<RuralPostcode> getRuralPostcodes(final Integer stateId, final Integer lgaId, final String district, final String town)
     {
         final String query = "CALL get_rural_postcodes(" +
                 "? " +
@@ -44,7 +44,7 @@ public class PostcodeSearchRepo
 
         ruralPostcodes = this.jdbcTemplate.query(
                 query,
-                new Object[]{state, lga, town, district},
+                new Object[]{stateId, lgaId, town, district},
                 (rs, rowNum) -> {
                     final RuralPostcode ruralPostcode = new RuralPostcode();
 
@@ -64,13 +64,13 @@ public class PostcodeSearchRepo
     /**
      * Retrieve urban postcodes.
      *
-     * @param state
+     * @param stateId
      * @param town
      * @param street
      * @param area
      * @return List<UrbanPostcode>
      */
-    public List<UrbanPostcode> getUrbanPostcodes(final String state, final String town, final String street, final String area)
+    public List<UrbanPostcode> getUrbanPostcodes(final Integer stateId, final String town, final String area, final String street)
     {
         final String query = "CALL get_urban_postcodes(" +
                 "? " +
@@ -82,7 +82,7 @@ public class PostcodeSearchRepo
 
         urbanPostcodes = this.jdbcTemplate.query(
                 query,
-                new Object[]{state, town, street, area},
+                new Object[]{stateId, town, street, area},
                 (rs, rowNum) -> {
                     final UrbanPostcode urbanPostcode = new UrbanPostcode();
 
@@ -102,12 +102,12 @@ public class PostcodeSearchRepo
     /**
      * Retrieve facility postcodes.
      *
-     * @param state
-     * @param lga
+     * @param stateId
+     * @param lgaId
      * @param facility
      * @return List<FacilityPostcode>
      */
-    public List<FacilityPostcode> getFacilityPostcodes(final String state, final String lga, final String facility)
+    public List<FacilityPostcode> getFacilityPostcodes(final Integer stateId, final Integer lgaId, final String facility)
     {
         final String query = "CALL get_facility_postcodes(" +
                 "? " +
@@ -118,7 +118,7 @@ public class PostcodeSearchRepo
 
         facilityPostcodes = this.jdbcTemplate.query(
                 query,
-                new Object[]{state, lga, facility},
+                new Object[]{stateId, lgaId, facility},
                 (rs, rowNum) -> {
                     final FacilityPostcode facilityPostcode = new FacilityPostcode();
 

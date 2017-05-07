@@ -1,4 +1,4 @@
-package com.elsynergy.nigerianpostcodes.model.Response;
+package com.elsynergy.nigerianpostcodes.model.response;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,17 +27,17 @@ public class ApiErrorResponse
 
     public Integer getErrorCode()
     {
-        return errorCode;
+        return this.errorCode;
     }
 
     public String getMessage()
     {
-        return message;
+        return this.message;
     }
 
     public List<String> getMessageDetails()
     {
-        return messageDetails;
+        return this.messageDetails;
     }
 
 }

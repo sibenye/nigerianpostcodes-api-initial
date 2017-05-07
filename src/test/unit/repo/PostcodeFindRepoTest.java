@@ -1,9 +1,9 @@
 package repo;
 
-import com.elsynergy.nigerianpostcodes.model.Response.FacilityPostcode;
-import com.elsynergy.nigerianpostcodes.model.Response.RuralPostcode;
-import com.elsynergy.nigerianpostcodes.model.Response.UrbanPostcode;
-import com.elsynergy.nigerianpostcodes.repo.PostcodeSearchRepo;
+import com.elsynergy.nigerianpostcodes.model.DAO.FacilityPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.RuralPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.UrbanPostcode;
+import com.elsynergy.nigerianpostcodes.repo.FindRepo;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,10 +17,10 @@ import org.springframework.jdbc.core.RowMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostcodeSearchRepoTest
+public class PostcodeFindRepoTest
 {
     @InjectMocks
-    private PostcodeSearchRepo postcodeSearchRepo;
+    private FindRepo postcodeFindRepo;
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -34,14 +34,14 @@ public class PostcodeSearchRepoTest
     @Test
     public void testGetRuralPostcodes()
     {
-        final String state = "test_State";
-        final String lga = "test_lga";
+        final Integer stateId = 5;
+        final Integer lgaId = 78;
         final String town = "test_town";
         final String district = "test_district";
 
         final RuralPostcode ruralPostcode = new RuralPostcode();
-        ruralPostcode.setState(state);
-        ruralPostcode.setLga(lga);
+        ruralPostcode.setState("test-state");
+        ruralPostcode.setLga("test-lga");
         ruralPostcode.setTown(town);
         ruralPostcode.setDistrict(district);
         ruralPostcode.setPostcode(12345);
@@ -56,7 +56,7 @@ public class PostcodeSearchRepoTest
             Mockito.any(RowMapper.class)
         );
 
-        this.postcodeSearchRepo.getRuralPostcodes(state, lga, town, district);
+        this.postcodeFindRepo.getRuralPostcodes(stateId, lgaId, district, town);
         Mockito.verify(this.jdbcTemplate)
             .query(
                     Mockito.anyString(),
@@ -69,13 +69,13 @@ public class PostcodeSearchRepoTest
     @Test
     public void testGetUrbanPostcodes()
     {
-        final String state = "test_State";
+        final Integer stateId = 20;
         final String street = "test_street";
         final String town = "test_town";
         final String area = "test_area";
 
         final UrbanPostcode urbanPostcode = new UrbanPostcode();
-        urbanPostcode.setState(state);
+        urbanPostcode.setState("test-state");
         urbanPostcode.setStreet(street);
         urbanPostcode.setTown(town);
         urbanPostcode.setArea(area);
@@ -91,7 +91,7 @@ public class PostcodeSearchRepoTest
             Mockito.any(RowMapper.class)
         );
 
-        this.postcodeSearchRepo.getRuralPostcodes(state, street, town, area);
+        this.postcodeFindRepo.getUrbanPostcodes(stateId, street, area, town);
         Mockito.verify(this.jdbcTemplate)
             .query(
                     Mockito.anyString(),
@@ -105,13 +105,13 @@ public class PostcodeSearchRepoTest
     @Test
     public void testGetFacilityPostcodes()
     {
-        final String state = "test_State";
-        final String lga = "test_lga";
+        final Integer stateId = 20;
+        final Integer lgaId = 60;
         final String facility = "test_facility";
 
         final FacilityPostcode facilityPostcode = new FacilityPostcode();
-        facilityPostcode.setState(state);
-        facilityPostcode.setLga(lga);
+        facilityPostcode.setState("test-state");
+        facilityPostcode.setLga("test-lga");
         facilityPostcode.setFacility(facility);
         facilityPostcode.setPostcode(12345);
 
@@ -125,7 +125,7 @@ public class PostcodeSearchRepoTest
             Mockito.any(RowMapper.class)
         );
 
-        this.postcodeSearchRepo.getFacilityPostcodes(state, lga, facility);
+        this.postcodeFindRepo.getFacilityPostcodes(stateId, lgaId, facility);
         Mockito.verify(this.jdbcTemplate)
             .query(
                     Mockito.anyString(),

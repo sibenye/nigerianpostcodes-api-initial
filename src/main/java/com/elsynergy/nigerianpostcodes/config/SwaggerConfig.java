@@ -39,7 +39,7 @@ public class SwaggerConfig
     {
         final ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("Nigerian Postcodes API")
-                .contact(new Contact("El-Synergy Dev Team", "https://www.el-synergy.com", "dev@el-synergy.com"))
+                .contact(new Contact("El-Synergy Dev Team", "http://www.el-synergy.com", "dev@el-synergy.com"))
                 .version(this.version)
                 .build();
 

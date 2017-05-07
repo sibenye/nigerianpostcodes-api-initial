@@ -1,4 +1,4 @@
-package com.elsynergy.nigerianpostcodes.model.Response;
+package com.elsynergy.nigerianpostcodes.model.DAO;
 
 /**
  *

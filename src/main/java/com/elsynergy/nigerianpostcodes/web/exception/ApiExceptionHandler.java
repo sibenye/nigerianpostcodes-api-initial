@@ -1,6 +1,6 @@
 package com.elsynergy.nigerianpostcodes.web.exception;
 
-import com.elsynergy.nigerianpostcodes.model.Response.ApiErrorResponse;
+import com.elsynergy.nigerianpostcodes.model.response.ApiErrorResponse;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
