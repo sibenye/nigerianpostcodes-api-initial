@@ -1,8 +1,6 @@
 package com.elsynergy.nigerianpostcodes.service;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.FacilityPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.RuralPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.UrbanPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.*;
 import com.elsynergy.nigerianpostcodes.repo.FindRepo;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
@@ -21,7 +19,7 @@ import java.util.List;
 public class FindService
 {
     @Autowired
-    private FindRepo postcodeSearchRepo;
+    private FindRepo postcodeFindRepo;
 
     /**
      * Retrieve rural postcodes.
@@ -35,10 +33,14 @@ public class FindService
      */
     public List<RuralPostcode> getRuralPostcodes(final Integer stateId, final Integer lgaId, final String district, final String town) throws ResourceNotFoundException
     {
-        final List<RuralPostcode> ruralPostcodes = this.postcodeSearchRepo.getRuralPostcodes(stateId, lgaId, district, town);
+        final List<RuralPostcode> ruralPostcodes = this.postcodeFindRepo.getRuralPostcodes(stateId, lgaId, district, town);
 
         if (ruralPostcodes.size() == 0) {
-            throw new ResourceNotFoundException("No postcodes found");
+            final String message = (lgaId == null && district == null && town == null) ? "No Rural Postcodes Found For Selected State."
+                    : (district == null && town == null) ? "No Rural Postcodes Found For Selected LGA."
+                            : town == null ? "No Rural Postcodes Found For Selected District."
+                                    : "No Postcode Found For Selected Town.";
+            throw new ResourceNotFoundException(message);
         }
 
         return ruralPostcodes;
@@ -56,10 +58,13 @@ public class FindService
      */
     public List<UrbanPostcode> getUrbanPostcodes(final Integer stateId, final String town, final String area, final String street) throws ResourceNotFoundException
     {
-        final List<UrbanPostcode> urbanPostcodes = this.postcodeSearchRepo.getUrbanPostcodes(stateId, town, area, street);
+        final List<UrbanPostcode> urbanPostcodes = this.postcodeFindRepo.getUrbanPostcodes(stateId, town, area, street);
 
         if (urbanPostcodes.size() == 0) {
-            throw new ResourceNotFoundException("No postcodes found");
+            final String message = (town == null && area == null && street == null) ? "No Urban Postcodes Found For Selected State."
+                    : (area == null && street == null) ? "No Urban Postcodes Found For Selected Town."
+                            : street == null ? "No Urban Postcodes Found For Selected Area" : "No Postcode Found For Selected Street.";
+            throw new ResourceNotFoundException(message);
         }
 
         return urbanPostcodes;
@@ -76,15 +81,56 @@ public class FindService
      */
     public List<FacilityPostcode> getFacilityPostcodes(final Integer stateId, final Integer lgaId, final String facility) throws ResourceNotFoundException
     {
-        final List<FacilityPostcode> facilityPostcodes = this.postcodeSearchRepo.getFacilityPostcodes(stateId, lgaId, facility);
+        final List<FacilityPostcode> facilityPostcodes = this.postcodeFindRepo.getFacilityPostcodes(stateId, lgaId, facility);
 
         if (facilityPostcodes.size() == 0) {
-            throw new ResourceNotFoundException("No postcodes found");
+            final String message = (lgaId == null && facility == null) ? "No Facility Postcodes Found For The Selected State."
+                    : (facility == null) ? "No Facility Postcodes Found For Selected LGA."
+                            : "No Postcode Found For Selected Facility.";
+            throw new ResourceNotFoundException(message);
         }
 
         return facilityPostcodes;
     }
 
+    /**
+     * Retrieve States.
+     *
+     * @param stateId
+     * @return List<State>
+     * @throws ResourceNotFoundException
+     */
+    public List<State> getStates(final Integer stateId) throws ResourceNotFoundException
+    {
+        final List<State> states = this.postcodeFindRepo.getStates(stateId);
+
+        if (states.size() == 0) {
+            final String message = stateId == null ? "No States Found." : "StateId: " + stateId + " Was Not Found.";
+            throw new ResourceNotFoundException(message);
+        }
+
+        return states;
+    }
+
+    /**
+     * Retrieve LGAs.
+     *
+     * @param stateId
+     * @param lgaId
+     * @return
+     * @throws ResourceNotFoundException
+     */
+    public List<LGA> getLGAs(final Integer stateId, final Integer lgaId) throws ResourceNotFoundException
+    {
+        final List<LGA> lgas = this.postcodeFindRepo.getLGAs(stateId, lgaId);
+
+        if (lgas.size() == 0) {
+            final String message = lgaId == null ? "No LGAs Found For stateId: "+ stateId + "." : "lgaId: " + lgaId + " Was Not Found.";
+            throw new ResourceNotFoundException(message);
+        }
+
+        return lgas;
+    }
 
 
 }

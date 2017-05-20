@@ -1,8 +1,6 @@
 package repo;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.FacilityPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.RuralPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.UrbanPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.*;
 import com.elsynergy.nigerianpostcodes.repo.FindRepo;
 
 import org.junit.Before;
@@ -17,10 +15,10 @@ import org.springframework.jdbc.core.RowMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostcodeFindRepoTest
+public class FindRepoTest
 {
     @InjectMocks
-    private FindRepo postcodeFindRepo;
+    private FindRepo findRepo;
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -56,7 +54,7 @@ public class PostcodeFindRepoTest
             Mockito.any(RowMapper.class)
         );
 
-        this.postcodeFindRepo.getRuralPostcodes(stateId, lgaId, district, town);
+        this.findRepo.getRuralPostcodes(stateId, lgaId, district, town);
         Mockito.verify(this.jdbcTemplate)
             .query(
                     Mockito.anyString(),
@@ -91,7 +89,7 @@ public class PostcodeFindRepoTest
             Mockito.any(RowMapper.class)
         );
 
-        this.postcodeFindRepo.getUrbanPostcodes(stateId, street, area, town);
+        this.findRepo.getUrbanPostcodes(stateId, street, area, town);
         Mockito.verify(this.jdbcTemplate)
             .query(
                     Mockito.anyString(),
@@ -125,7 +123,70 @@ public class PostcodeFindRepoTest
             Mockito.any(RowMapper.class)
         );
 
-        this.postcodeFindRepo.getFacilityPostcodes(stateId, lgaId, facility);
+        this.findRepo.getFacilityPostcodes(stateId, lgaId, facility);
+        Mockito.verify(this.jdbcTemplate)
+            .query(
+                    Mockito.anyString(),
+                    Mockito.any(Object[].class),
+                    Mockito.any(RowMapper.class)
+            );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetStates()
+    {
+        final Integer stateId = 20;
+
+        final State state = new State();
+        state.setState("test-state");
+        state.setStateId(20);
+        state.setStateCode("test-statecode");
+
+        final List<State> states = new ArrayList<>();
+        states.add(state);
+
+        Mockito.doReturn(states).when(this.jdbcTemplate)
+        .query(
+            Mockito.anyString(),
+            Mockito.any(Object[].class),
+            Mockito.any(RowMapper.class)
+        );
+
+        this.findRepo.getStates(stateId);
+        Mockito.verify(this.jdbcTemplate)
+            .query(
+                    Mockito.anyString(),
+                    Mockito.any(Object[].class),
+                    Mockito.any(RowMapper.class)
+            );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetLGAs()
+    {
+        final Integer stateId = 20;
+        final Integer lgaId = 77;
+
+        final LGA lga = new LGA();
+        lga.setLgaId(lgaId);
+        lga.setLga("test-lga");
+        lga.setState("test-state");
+        lga.setStateId(20);
+        lga.setStateCode("test-statecode");
+
+        final List<LGA> lgas = new ArrayList<>();
+        lgas.add(lga);
+
+        Mockito.doReturn(lgas).when(this.jdbcTemplate)
+        .query(
+            Mockito.anyString(),
+            Mockito.any(Object[].class),
+            Mockito.any(RowMapper.class)
+        );
+
+        this.findRepo.getLGAs(stateId, lgaId);
         Mockito.verify(this.jdbcTemplate)
             .query(
                     Mockito.anyString(),

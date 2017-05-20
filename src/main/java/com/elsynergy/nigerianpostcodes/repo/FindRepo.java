@@ -1,8 +1,6 @@
 package com.elsynergy.nigerianpostcodes.repo;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.FacilityPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.RuralPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.UrbanPostcode;
+import com.elsynergy.nigerianpostcodes.model.DAO.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -132,6 +130,67 @@ public class FindRepo
             );
 
         return facilityPostcodes;
+    }
+
+    /**
+     * Retrieve States.
+     *
+     * @param stateId
+     * @return List<State>
+     */
+    public List<State> getStates(final Integer stateId)
+    {
+        final String query = "CALL get_states( ? )";
+
+        List<State> states = new ArrayList<>();
+
+        states = this.jdbcTemplate.query(
+                query,
+                new Object[]{stateId},
+                (rs, rowNum) -> {
+                    final State state = new State();
+
+                    state.setState(rs.getString("state"));
+                    state.setStateId(rs.getInt("stateId"));
+                    state.setStateCode(rs.getString("stateCode"));
+
+                    return state;
+                }
+            );
+
+        return states;
+    }
+
+    /**
+     * Retrieve LGAs.
+     *
+     * @param stateId
+     * @param lgaId
+     * @return List<LGA>
+     */
+    public List<LGA> getLGAs(final Integer stateId, final Integer lgaId)
+    {
+        final String query = "CALL get_lgas( ?, ? )";
+
+        List<LGA> lgas = new ArrayList<>();
+
+        lgas = this.jdbcTemplate.query(
+                query,
+                new Object[]{stateId, lgaId},
+                (rs, rowNum) -> {
+                    final LGA lga = new LGA();
+
+                    lga.setLgaId(rs.getInt("lgaId"));
+                    lga.setLga(rs.getString("lga"));
+                    lga.setState(rs.getString("state"));
+                    lga.setStateId(rs.getInt("stateId"));
+                    lga.setStateCode(rs.getString("stateCode"));
+
+                    return lga;
+                }
+            );
+
+        return lgas;
     }
 
 

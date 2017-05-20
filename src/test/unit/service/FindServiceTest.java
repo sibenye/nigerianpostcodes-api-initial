@@ -17,13 +17,13 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostcodeFindServiceTest
+public class FindServiceTest
 {
     @InjectMocks
-    private FindService postcodeSearchService;
+    private FindService findService;
 
     @Mock
-    private FindRepo postcodeFindRepo;
+    private FindRepo findRepo;
 
     @Before
     public void setUp()
@@ -50,11 +50,11 @@ public class PostcodeFindServiceTest
         ruralPostcodes.add(ruralPostcode);
 
 
-        Mockito.doReturn(ruralPostcodes).when(this.postcodeFindRepo).getRuralPostcodes(stateId, lgaId, district, town);
+        Mockito.doReturn(ruralPostcodes).when(this.findRepo).getRuralPostcodes(stateId, lgaId, district, town);
 
-        this.postcodeSearchService.getRuralPostcodes(stateId, lgaId, town, district);
+        this.findService.getRuralPostcodes(stateId, lgaId, district, town);
 
-        Mockito.verify(this.postcodeFindRepo).getRuralPostcodes(stateId, lgaId, town, district);
+        Mockito.verify(this.findRepo).getRuralPostcodes(stateId, lgaId, district, town);
     }
 
     @Test
@@ -76,17 +76,17 @@ public class PostcodeFindServiceTest
         urbanPostcodes.add(urbanPostcode);
 
 
-        Mockito.doReturn(urbanPostcodes).when(this.postcodeFindRepo).getUrbanPostcodes(stateId, town, area, street);
+        Mockito.doReturn(urbanPostcodes).when(this.findRepo).getUrbanPostcodes(stateId, town, area, street);
 
-        this.postcodeSearchService.getUrbanPostcodes(stateId, town, street, area);
+        this.findService.getUrbanPostcodes(stateId, town, area, street);
 
-        Mockito.verify(this.postcodeFindRepo).getUrbanPostcodes(stateId, town, street, area);
+        Mockito.verify(this.findRepo).getUrbanPostcodes(stateId, town, area, street);
     }
 
     @Test
     public void testGetFacilityPostcodes() throws ResourceNotFoundException
     {
-        final Integer stateId = 20;
+        final Integer stateId = 200;
         final Integer lgaId = 100;
         final String facility = "test_facility";
 
@@ -100,11 +100,11 @@ public class PostcodeFindServiceTest
         facilityPostcodes.add(facilityPostcode);
 
 
-        Mockito.doReturn(facilityPostcodes).when(this.postcodeFindRepo).getFacilityPostcodes(stateId, lgaId, facility);
+        Mockito.doReturn(facilityPostcodes).when(this.findRepo).getFacilityPostcodes(stateId, lgaId, facility);
 
-        this.postcodeSearchService.getFacilityPostcodes(stateId, lgaId, facility);
+        this.findService.getFacilityPostcodes(stateId, lgaId, facility);
 
-        Mockito.verify(this.postcodeFindRepo).getFacilityPostcodes(stateId, lgaId, facility);
+        Mockito.verify(this.findRepo).getFacilityPostcodes(stateId, lgaId, facility);
     }
 
 }

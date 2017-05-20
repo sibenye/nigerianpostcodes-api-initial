@@ -17,33 +17,33 @@ import javax.validation.Valid;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/find")
+@RequestMapping("/postcodes")
 /**
- * Postcode Search Controller.
+ * Postcode Controller.
  *
  * @author silver.ibenye
  *
  */
-public class FindController
+public class PostcodeController
 {
     @Autowired
     private FindService findService;
 
-    @ApiOperation(value = "Retrieve rural postcodes.")
-    @RequestMapping(method = RequestMethod.GET, value = "/rural-postcodes/{stateId}/{lgaId}")
+    @ApiOperation(value = "Retrieve Rural Postcodes.")
+    @RequestMapping(method = RequestMethod.GET, value = "/rural-postcodes/{stateId}")
     public @ResponseBody ApiResponse getRuralPostcodes(
             @Valid @PathVariable final Integer stateId,
-            @Valid @PathVariable final Integer lgaId,
-            @Valid @RequestParam ( required = false ) final String town,
-            @Valid @RequestParam ( required = false ) final String district
+            @Valid @RequestParam ( required = false ) final Integer lgaId,
+            @Valid @RequestParam ( required = false ) final String district,
+            @Valid @RequestParam ( required = false ) final String town
             ) throws ResourceNotFoundException
     {
-        final List<RuralPostcode> result = this.findService.getRuralPostcodes(stateId, lgaId, town, district);
+        final List<RuralPostcode> result = this.findService.getRuralPostcodes(stateId, lgaId, district, town);
         return new ApiResponse(result);
     }
 
 
-    @ApiOperation(value = "Retrieve urban postcodes.")
+    @ApiOperation(value = "Retrieve Urban Postcodes.")
     @RequestMapping(method = RequestMethod.GET, value = "/urban-postcodes/{stateId}")
     public @ResponseBody ApiResponse getUrbanPostcodes(
             @Valid @PathVariable final Integer stateId,
@@ -56,7 +56,7 @@ public class FindController
         return new ApiResponse(result);
     }
 
-    @ApiOperation(value = "Retrieve facility postcodes.")
+    @ApiOperation(value = "Retrieve Facility Postcodes.")
     @RequestMapping(method = RequestMethod.GET, value = "/facility-postcodes/{stateId}")
     public @ResponseBody ApiResponse getFacilityPostcodes(
             @Valid @PathVariable final Integer stateId,
@@ -67,7 +67,5 @@ public class FindController
         final List<FacilityPostcode> result = this.findService.getFacilityPostcodes(stateId, lgaId, facility);
         return new ApiResponse(result);
     }
-
-
 
 }

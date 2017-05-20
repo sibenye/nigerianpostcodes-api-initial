@@ -47,3 +47,12 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile 'org.springframework:spring-test'
 }
+
+// Non-default java source sets.
+sourceSets {
+    test {
+        java {
+            srcDir 'src/test/unit'
+        }
+    }
+}
