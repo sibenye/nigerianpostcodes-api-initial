@@ -29,9 +29,9 @@ public class GeographyController
     private FindService findService;
 
     @ApiOperation(value = "Retrieve States.")
-    @RequestMapping(method = RequestMethod.GET, value = "/states/{stateId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/states")
     public @ResponseBody ApiResponse getStates(
-            @Valid @PathVariable ( required = false ) final Integer stateId
+            @Valid @RequestParam ( required = false ) final Integer stateId
             ) throws ResourceNotFoundException
     {
         final List<State> result = this.findService.getStates(stateId);
@@ -39,7 +39,7 @@ public class GeographyController
     }
 
     @ApiOperation(value = "Retrieve LGAs.")
-    @RequestMapping(method = RequestMethod.GET, value = "/states/{stateId}/lgas/")
+    @RequestMapping(method = RequestMethod.GET, value = "/states/{stateId}/lgas")
     public @ResponseBody ApiResponse getLGAs(
             @Valid @PathVariable final Integer stateId,
             @Valid @RequestParam ( required = false ) final Integer lgaId
