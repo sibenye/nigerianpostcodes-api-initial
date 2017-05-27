@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+# This should be run as root, from the project root directory
+
+# To run:
+docker  run -d \
+        -p 8080:8080 \
+        --name nigerianpostcodes-api \
+        nigerianpostcodes-api

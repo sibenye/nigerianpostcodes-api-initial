@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+# Build docs
+# http://docs.docker.com/reference/commandline/cli/#build
+
+# This should be run as root, from the project root directory
+
+docker build --no-cache --rm -t nigerianpostcodes-api .
