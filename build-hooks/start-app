@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+nohup java -jar ../build/libs/nigerianpostcodes-api-0.0.1.jar &

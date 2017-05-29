@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "overwriting application.properties file"
+cp ../../config/application.properties ../src/main/resources/
+
+echo "Running build hook."
+./gradlew clean build

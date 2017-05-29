@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-echo "Running build hook."
-./gradlew clean build
