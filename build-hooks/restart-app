@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+projDir="/var/www/vhosts/el-synergy.com/npc-api.el-synergy.com"
+
+$projDir/scripts/stop-app;
+
+sleep 2s # Waits 2 seconds.
+
+$projDir/scripts/start-app

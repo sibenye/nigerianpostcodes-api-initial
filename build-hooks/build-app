@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+
+projDir="/var/www/vhosts/el-synergy.com/npc-api.el-synergy.com"
+
+echo "...overwriting application.properties file"
+cp $projDir/config/application.properties $projDir/source_code/src/main/resources/
+
+echo "...running build hook."
+cd $projDir/source_code && ./gradlew clean build
+

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+projDir="/var/www/vhosts/el-synergy.com/npc-api.el-synergy.com"
+
+#create release directory
+echo "...creating new release directory"
+newDir="relesase_"$(date '+%Y%m%d%H%M%S');
+mkdir $projDir/releases/$newDir
+
+#copy jar file to the new release directory
+echo "...copying jar file"
+cp $projDir/source_code/build/libs/nigerianpostcodes-api-0.0.1.jar $projDir/releases/$newDir
+
+#point sym link to new directory
+echo "...transfering sym link"
+rm -f $projDir/releases/current_release
+ln -s $projDir/releases/$newDir $projDir/releases/current_release

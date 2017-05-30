@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-nohup java -jar ../build/libs/nigerianpostcodes-api-0.0.1.jar &
+projDir="/var/www/vhosts/el-synergy.com/npc-api.el-synergy.com"
+
+nohup java -jar $projDir/releases/current_release/nigerianpostcodes-api-0.0.1.jar &

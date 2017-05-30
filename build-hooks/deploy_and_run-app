@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+projDir="/var/www/vhosts/el-synergy.com/npc-api.el-synergy.com"
+
+$projDir/scripts/build-app
+
+$projDir/scripts/deploy-app
+
+$projDir/scripts/restart-app
+
+echo "===DONE==="
