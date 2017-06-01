@@ -31,7 +31,10 @@ public class SwaggerConfig
     {
         return or(
                 regex("/error"),
-                regex("/health.json"));
+                regex("/health"),
+                regex("/health.json"),
+                regex("/shutdown"),
+                regex("/shutdown.json"));
     }
 
     @Bean
