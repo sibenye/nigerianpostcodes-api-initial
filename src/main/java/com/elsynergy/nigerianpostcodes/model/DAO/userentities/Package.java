@@ -4,6 +4,11 @@ import java.sql.Date;
 
 import javax.persistence.*;
 
+/**
+ *
+ * @author silver.ibenye
+ *
+ */
 @Entity
 @Table(name = "packages")
 public class Package

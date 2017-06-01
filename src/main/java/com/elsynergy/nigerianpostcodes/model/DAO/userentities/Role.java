@@ -2,6 +2,11 @@ package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
 import javax.persistence.*;
 
+/**
+ *
+ * @author silver.ibenye
+ *
+ */
 @Entity
 @Table(name = "roles")
 public class Role
