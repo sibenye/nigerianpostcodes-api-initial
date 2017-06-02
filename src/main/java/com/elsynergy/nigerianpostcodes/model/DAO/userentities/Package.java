@@ -1,6 +1,9 @@
 package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
+import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
+
 import java.sql.Date;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -16,11 +19,11 @@ public class Package
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    private com.elsynergy.nigerianpostcodes.model.enums.Package name;
+    private PackageEnum name;
 
     @Column(name = "allowedMonthlyRequests", nullable = true)
     private Integer allowedMonthlyRequests;
@@ -39,22 +42,27 @@ public class Package
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateModified;
 
-    public Long getId()
+    @ManyToMany(targetEntity=Feature.class)
+    private Set<Feature> featureSet;
+
+    public Package() {}
+
+    public Integer getId()
     {
         return this.id;
     }
 
-    public void setId(final Long id)
+    public void setId(final Integer id)
     {
         this.id = id;
     }
 
-    public com.elsynergy.nigerianpostcodes.model.enums.Package getName()
+    public com.elsynergy.nigerianpostcodes.model.enums.PackageEnum getName()
     {
         return this.name;
     }
 
-    public void setName(final com.elsynergy.nigerianpostcodes.model.enums.Package name)
+    public void setName(final com.elsynergy.nigerianpostcodes.model.enums.PackageEnum name)
     {
         this.name = name;
     }
@@ -107,6 +115,16 @@ public class Package
     public void setDateModified(final Date dateModified)
     {
         this.dateModified = dateModified;
+    }
+
+    public Set<Feature> getFeatureSet()
+    {
+        return this.featureSet;
+    }
+
+    public void setFeatureSet(final Set<Feature> featureSet)
+    {
+        this.featureSet = featureSet;
     }
 
 }

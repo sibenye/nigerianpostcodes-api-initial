@@ -1,5 +1,7 @@
 package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
+import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
+
 import javax.persistence.*;
 
 /**
@@ -14,28 +16,28 @@ public class Role
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    private com.elsynergy.nigerianpostcodes.model.enums.Role name;
+    private RoleEnum name;
 
-    public Long getId()
+    public Integer getId()
     {
         return this.id;
     }
 
-    public void setId(final Long id)
+    public void setId(final Integer id)
     {
         this.id = id;
     }
 
-    public com.elsynergy.nigerianpostcodes.model.enums.Role getName()
+    public com.elsynergy.nigerianpostcodes.model.enums.RoleEnum getName()
     {
         return this.name;
     }
 
-    public void setName(final com.elsynergy.nigerianpostcodes.model.enums.Role name)
+    public void setName(final com.elsynergy.nigerianpostcodes.model.enums.RoleEnum name)
     {
         this.name = name;
     }
