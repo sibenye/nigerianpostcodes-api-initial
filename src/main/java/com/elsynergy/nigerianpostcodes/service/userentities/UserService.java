@@ -46,15 +46,15 @@ public class UserService
 
         final Integer packageId = PackageEnum.ID_LOOKUP_MAP.get(request.getPackageName().toString());
         final Package userPackage = this.packageRepository.findOne(packageId);
-        user.setUserPackage(userPackage);
+        //user.setUserPackage(userPackage);
 
         final Integer roleId = RoleEnum.ID_LOOKUP_MAP.get(RoleEnum.USER.toString());
         final Role userRole = this.roleRepository.findOne(roleId);
-        user.setUserRole(userRole);
+        //user.setUserRole(userRole);
 
-        this.userRepository.save(user);
+        //this.userRepository.save(user);
 
-        return null;
+        return this.userRepository.save(user);
     }
 
 }

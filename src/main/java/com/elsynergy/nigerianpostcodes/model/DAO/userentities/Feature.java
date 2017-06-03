@@ -1,6 +1,6 @@
 package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.*;
 

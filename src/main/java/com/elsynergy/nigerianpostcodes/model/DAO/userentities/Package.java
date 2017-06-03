@@ -2,7 +2,7 @@ package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
