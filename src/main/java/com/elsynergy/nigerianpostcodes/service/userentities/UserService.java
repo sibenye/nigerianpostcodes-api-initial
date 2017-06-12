@@ -1,7 +1,5 @@
 package com.elsynergy.nigerianpostcodes.service.userentities;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.userentities.Package;
-import com.elsynergy.nigerianpostcodes.model.DAO.userentities.Role;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
@@ -24,19 +22,13 @@ import org.springframework.stereotype.Service;
 public class UserService
 {
     @Autowired
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private final PackageRepository packageRepository;
+    private PackageRepository packageRepository;
 
     @Autowired
-    private final RoleRepository roleRepository;
-
-    public UserService(final UserRepository userRepository, final PackageRepository packageRepository, final RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.packageRepository = packageRepository;
-        this.roleRepository = roleRepository;
-    }
+    private RoleRepository roleRepository;
 
     public User registerUser(final RegisterUserRequest request) {
         final User user = new User();
@@ -45,12 +37,14 @@ public class UserService
         user.setActive(true);
 
         final Integer packageId = PackageEnum.ID_LOOKUP_MAP.get(request.getPackageName().toString());
-        final Package userPackage = this.packageRepository.findOne(packageId);
-        //user.setUserPackage(userPackage);
+        user.setPackageId(packageId);
 
         final Integer roleId = RoleEnum.ID_LOOKUP_MAP.get(RoleEnum.USER.toString());
-        final Role userRole = this.roleRepository.findOne(roleId);
-        //user.setUserRole(userRole);
+        user.setRoleId(roleId);
+
+        //final Date nowDate = new Date();
+        //user.setDateCreated(nowDate);
+        //user.setDateModified(nowDate);
 
         //this.userRepository.save(user);
 

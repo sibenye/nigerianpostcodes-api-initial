@@ -2,7 +2,6 @@ package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -14,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "packages")
-public class Package
+public class Package extends Audit
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,22 +24,14 @@ public class Package
     @Enumerated(EnumType.STRING)
     private PackageEnum name;
 
-    @Column(name = "allowedMonthlyRequests", nullable = true)
+    @Column(name = "allowedmonthlyrequests", nullable = true)
     private Integer allowedMonthlyRequests;
 
-    @Column(name = "unlimitedRequests")
+    @Column(name = "unlimitedrequests")
     private Boolean unlimitedRequests;
 
-    @Column(name = "allowExtraRequests")
+    @Column(name = "allowextrarequests")
     private Boolean allowExtraRequests;
-
-    @Column(name = "dateCreated", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreated;
-
-    @Column(name = "dateModified", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateModified;
 
     @ManyToMany(targetEntity=Feature.class)
     private Set<Feature> featureSet;
@@ -95,26 +86,6 @@ public class Package
     public void setAllowExtraRequests(final Boolean allowExtraRequests)
     {
         this.allowExtraRequests = allowExtraRequests;
-    }
-
-    public Date getDateCreated()
-    {
-        return this.dateCreated;
-    }
-
-    public void setDateCreated(final Date dateCreated)
-    {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateModified()
-    {
-        return this.dateModified;
-    }
-
-    public void setDateModified(final Date dateModified)
-    {
-        this.dateModified = dateModified;
     }
 
     public Set<Feature> getFeatureSet()

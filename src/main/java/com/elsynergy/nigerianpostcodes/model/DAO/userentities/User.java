@@ -2,8 +2,6 @@ package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
 
 
-import java.util.Date;
-
 import javax.persistence.*;
 
 /**
@@ -13,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "users")
-public class User
+public class User extends Audit
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,19 +27,15 @@ public class User
     @Column(name = "active")
     private Boolean active;
 
-    @ManyToOne
-    private Role userRole;
+    @Column(name = "roleid")
+    private Integer roleId;
 
-    @ManyToOne
-    private Package userPackage;
+    @Column(name = "packageid")
+    private Integer packageId;
 
-    @Column(name = "dateCreated", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreated;
+    public User() {
 
-    @Column(name = "dateModified", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateModified;
+    }
 
     public Long getId()
     {
@@ -83,46 +77,24 @@ public class User
         this.active = active;
     }
 
-    public Role getUserRole()
+    public Integer getRoleId()
     {
-        return this.userRole;
+        return this.roleId;
     }
 
-    public void setUserRole(final Role userRole)
+    public void setRoleId(final Integer userRole)
     {
-        this.userRole = userRole;
+        this.roleId = userRole;
     }
 
-    public Package getUserPackage()
+    public Integer getPackageId()
     {
-        return this.userPackage;
+        return this.packageId;
     }
 
-    public void setUserPackage(final Package userPackage)
+    public void setPackageId(final Integer userPackage)
     {
-        this.userPackage = userPackage;
+        this.packageId = userPackage;
     }
-
-    public Date getDateCreated()
-    {
-        return this.dateCreated;
-    }
-
-    public void setDateCreated(final Date dateCreated)
-    {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateModified()
-    {
-        return this.dateModified;
-    }
-
-    public void setDateModified(final Date dateModified)
-    {
-        this.dateModified = dateModified;
-    }
-
-
 
 }
