@@ -1,14 +1,12 @@
 package com.elsynergy.nigerianpostcodes.service.userentities;
 
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
-import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
 import com.elsynergy.nigerianpostcodes.model.request.RegisterUserRequest;
 import com.elsynergy.nigerianpostcodes.repo.userentities.PackageRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.RoleRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,15 +28,12 @@ public class UserService
     private RoleRepository roleRepository;
 
     public User registerUser(final RegisterUserRequest request) {
-        final User user = new User();
-        user.setUsername(request.getUsername());;
-        user.setPasswordHash(new BCryptPasswordEncoder().encode(request.getPassword()));
-        user.setActive(true);
+        final User user = new User(request);
 
         final Integer packageId = this.packageRepository.findOneByName(request.getPackageName().toString()).get().getId();
         user.setPackageId(packageId);
 
-        final Integer roleId = this.roleRepository.findOneByName(RoleEnum.USER.toString()).get().getId();
+        final Integer roleId = this.roleRepository.findOneByName(request.getRole().toString()).get().getId();
         user.setRoleId(roleId);
 
         return this.userRepository.save(user);

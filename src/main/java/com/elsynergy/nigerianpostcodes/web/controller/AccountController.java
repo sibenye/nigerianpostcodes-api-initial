@@ -1,7 +1,7 @@
 package com.elsynergy.nigerianpostcodes.web.controller;
 
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
-import com.elsynergy.nigerianpostcodes.model.request.RegisterUserRequest;
+import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
 import com.elsynergy.nigerianpostcodes.service.userentities.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AccountController
 
     @ApiOperation(value = "Register new account")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public User registerAccount(@Valid @ModelAttribute final RegisterUserRequest request) {
+    public User registerAccount(@Valid @ModelAttribute final RegisterAccountRequest request) {
         return this.userService.registerUser(request);
     }
 

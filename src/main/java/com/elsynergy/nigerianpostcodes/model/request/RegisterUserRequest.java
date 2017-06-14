@@ -1,6 +1,7 @@
 package com.elsynergy.nigerianpostcodes.model.request;
 
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
+import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
 
 import javax.validation.constraints.NotNull;
 
@@ -53,6 +54,11 @@ public class RegisterUserRequest
     public void setPackageName(final PackageEnum packageName)
     {
         this.packageName = packageName;
+    }
+
+    public RoleEnum getRole()
+    {
+        return RoleEnum.USER;
     }
 
 }

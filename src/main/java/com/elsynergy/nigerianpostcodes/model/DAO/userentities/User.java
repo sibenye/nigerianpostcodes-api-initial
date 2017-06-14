@@ -2,6 +2,10 @@ package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
 
 
+import com.elsynergy.nigerianpostcodes.model.request.RegisterUserRequest;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 
 /**
@@ -35,6 +39,12 @@ public class User extends Audit
 
     public User() {
 
+    }
+
+    public User(final RegisterUserRequest request) {
+        this.username = request.getUsername();
+        this.passwordHash = new BCryptPasswordEncoder().encode(request.getPassword());
+        this.setActive(true);
     }
 
     public Long getId()
