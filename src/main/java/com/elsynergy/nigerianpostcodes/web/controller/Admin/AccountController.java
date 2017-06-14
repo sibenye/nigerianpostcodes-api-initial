@@ -1,4 +1,4 @@
-package com.elsynergy.nigerianpostcodes.web.controller;
+package com.elsynergy.nigerianpostcodes.web.controller.Admin;
 
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
 import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/admin/accounts")
 public class AccountController
 {
     @Autowired

@@ -21,20 +21,36 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-@PropertySource(value = "classpath:version.properties", ignoreResourceNotFound = true)
+@PropertySource(value = {
+        "classpath:version.properties",
+        "classpath:application.properties"
+        }, ignoreResourceNotFound = true)
 public class SwaggerConfig
 {
     @Value("${version}")
     private String version;
 
+    @Value("${app.prop.environment}")
+    private String environment;
+
+    @SuppressWarnings("unchecked")
     private Predicate<String> excludePaths()
     {
-        return or(
-                regex("/error"),
-                regex("/health"),
-                regex("/health.json"),
-                regex("/shutdown"),
-                regex("/shutdown.json"));
+        if (this.environment.equalsIgnoreCase("local")) {
+            return or(
+                    regex("/error"),
+                    regex("/health.json"),
+                    regex("/shutdown.json"));
+        } else {
+            return or(
+                    regex("/error"),
+                    regex("/health"),
+                    regex("/health.json"),
+                    regex("/shutdown"),
+                    regex("/shutdown.json"),
+                    regex("/admin/.*"));
+        }
+
     }
 
     @Bean
