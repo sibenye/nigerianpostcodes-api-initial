@@ -57,3 +57,13 @@ sourceSets {
         }
     }
 }
+
+// Copy version file to resources root.
+task copyVersionFile(type: Copy, group: 'build') {
+    from 'version.properties'
+    into "${project.getBuildDir()}/resources/main"
+}
+
+compileJava {
+    dependsOn copyVersionFile
+}
