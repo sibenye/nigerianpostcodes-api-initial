@@ -1,7 +1,6 @@
 package com.elsynergy.nigerianpostcodes.service.userentities;
 
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
-import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
 import com.elsynergy.nigerianpostcodes.model.request.RegisterUserRequest;
 import com.elsynergy.nigerianpostcodes.repo.userentities.PackageRepository;
@@ -36,17 +35,11 @@ public class UserService
         user.setPasswordHash(new BCryptPasswordEncoder().encode(request.getPassword()));
         user.setActive(true);
 
-        final Integer packageId = PackageEnum.ID_LOOKUP_MAP.get(request.getPackageName().toString());
+        final Integer packageId = this.packageRepository.findOneByName(request.getPackageName().toString()).get().getId();
         user.setPackageId(packageId);
 
-        final Integer roleId = RoleEnum.ID_LOOKUP_MAP.get(RoleEnum.USER.toString());
+        final Integer roleId = this.roleRepository.findOneByName(RoleEnum.USER.toString()).get().getId();
         user.setRoleId(roleId);
-
-        //final Date nowDate = new Date();
-        //user.setDateCreated(nowDate);
-        //user.setDateModified(nowDate);
-
-        //this.userRepository.save(user);
 
         return this.userRepository.save(user);
     }

@@ -1,5 +1,7 @@
 package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
+import java.util.Set;
+
 import javax.persistence.*;
 
 /**
@@ -19,6 +21,11 @@ public class Feature extends Audit
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @ManyToMany(mappedBy="features")
+    private Set<Package> packages;
+
+    public Feature() {}
+
     public Integer getId()
     {
         return this.id;
@@ -37,6 +44,16 @@ public class Feature extends Audit
     public void setName(final String name)
     {
         this.name = name;
+    }
+
+    public Set<Package> getPackages()
+    {
+        return this.packages;
+    }
+
+    public void setPackages(final Set<Package> packages)
+    {
+        this.packages = packages;
     }
 
 }

@@ -1,7 +1,5 @@
 package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
 
-import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
-
 import java.util.Set;
 
 import javax.persistence.*;
@@ -21,8 +19,7 @@ public class Package extends Audit
     private Integer id;
 
     @Column(name = "name", nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
-    private PackageEnum name;
+    private String name;
 
     @Column(name = "allowedmonthlyrequests", nullable = true)
     private Integer allowedMonthlyRequests;
@@ -33,8 +30,15 @@ public class Package extends Audit
     @Column(name = "allowextrarequests")
     private Boolean allowExtraRequests;
 
-    @ManyToMany(targetEntity=Feature.class)
-    private Set<Feature> featureSet;
+    @ManyToMany
+    @JoinTable(
+            name="package_feature_links",
+            joinColumns=
+                @JoinColumn(name="packageid", referencedColumnName="id"),
+            inverseJoinColumns=
+                @JoinColumn(name="featureid", referencedColumnName="id")
+        )
+    private Set<Feature> features;
 
     public Package() {}
 
@@ -48,12 +52,12 @@ public class Package extends Audit
         this.id = id;
     }
 
-    public com.elsynergy.nigerianpostcodes.model.enums.PackageEnum getName()
+    public String getName()
     {
         return this.name;
     }
 
-    public void setName(final com.elsynergy.nigerianpostcodes.model.enums.PackageEnum name)
+    public void setName(final String name)
     {
         this.name = name;
     }
@@ -90,12 +94,12 @@ public class Package extends Audit
 
     public Set<Feature> getFeatureSet()
     {
-        return this.featureSet;
+        return this.features;
     }
 
     public void setFeatureSet(final Set<Feature> featureSet)
     {
-        this.featureSet = featureSet;
+        this.features = featureSet;
     }
 
 }

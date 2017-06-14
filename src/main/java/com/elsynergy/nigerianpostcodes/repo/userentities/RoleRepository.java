@@ -4,6 +4,8 @@ import com.elsynergy.nigerianpostcodes.model.DAO.userentities.Role;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 /**
  *
  * @author silver.ibenye
@@ -11,5 +13,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface RoleRepository extends CrudRepository<Role, Integer>
 {
-
+    Optional<Role> findOneByName(String name);
 }

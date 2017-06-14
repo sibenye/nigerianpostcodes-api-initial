@@ -44,11 +44,6 @@ public class AppConfig
         return DataSourceBuilder.create().build();
     }
 
-    /*@Bean
-    IDateTimeService dateTimeService() {
-        return new DateTimeService();
-    }*/
-
     @Bean
     DateTimeProvider dateTimeProvider(final IDateTimeService dateTimeService) {
         return new AuditingDateTimeProvider(dateTimeService);
