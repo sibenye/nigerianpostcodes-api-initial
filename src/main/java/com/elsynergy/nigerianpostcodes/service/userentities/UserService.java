@@ -7,9 +7,12 @@ import com.elsynergy.nigerianpostcodes.model.response.AccountResponse;
 import com.elsynergy.nigerianpostcodes.repo.userentities.PackageRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.RoleRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.UserRepository;
+import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * User Service Class.
@@ -31,6 +34,16 @@ public class UserService
 
     @Autowired
     private AccountResponseMapper accountResponseMapper;
+
+    public AccountResponse getUserAccount(final String username) throws ResourceNotFoundException {
+        final Optional<User> user = this.userRepository.findOneByUsername(username);
+
+        if (!user.isPresent()) {
+            throw new ResourceNotFoundException();
+        }
+
+        return this.accountResponseMapper.map(user.get());
+    }
 
     public AccountResponse registerUser(final RegisterAccountRequest request) {
         final User user = new User(request);
