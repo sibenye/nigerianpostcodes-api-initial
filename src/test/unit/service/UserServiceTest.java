@@ -1,5 +1,6 @@
 package service;
 
+import com.elsynergy.nigerianpostcodes.mapper.AccountResponseMapper;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.PackageType;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.Role;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
@@ -37,6 +38,9 @@ public class UserServiceTest
     @Mock
     private RoleRepository roleRepository;
 
+    @Mock
+    private AccountResponseMapper acctResponseMapper;
+
     @InjectMocks
     private UserService userService;
 
@@ -58,6 +62,7 @@ public class UserServiceTest
         verify(this.packageRepository, times(1)).findOneByName(registerUserRequest.getPackageName().toString());
         verify(this.roleRepository, times(1)).findOneByName(RoleEnum.USER.toString());
         verify(this.userRepository, times(1)).save(any(User.class));
+        verify(this.acctResponseMapper, times(1)).map(any(User.class));
     }
 
 }
