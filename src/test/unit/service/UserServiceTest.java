@@ -11,6 +11,7 @@ import com.elsynergy.nigerianpostcodes.repo.userentities.PackageRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.RoleRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.UserRepository;
 import com.elsynergy.nigerianpostcodes.service.userentities.UserService;
+import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +46,7 @@ public class UserServiceTest
     private UserService userService;
 
     @Test
-    public void test()
+    public void testRegisterUser()
     {
         final RegisterAccountRequest registerUserRequest = new RegisterAccountRequest();
         registerUserRequest.setUsername("testUser");
@@ -63,6 +64,32 @@ public class UserServiceTest
         verify(this.roleRepository, times(1)).findOneByName(RoleEnum.USER.toString());
         verify(this.userRepository, times(1)).save(any(User.class));
         verify(this.acctResponseMapper, times(1)).map(any(User.class));
+    }
+
+    @Test
+    public void testGetUserAccount() throws ResourceNotFoundException
+    {
+        final String username = "testUser";
+        final User user = new User();
+        user.setUsername(username);
+        final Optional<User> userObj = Optional.of(user);
+
+        when(this.userRepository.findOneByUsername(username)).thenReturn(userObj);
+
+        this.userService.getUserAccount(username);
+        verify(this.userRepository, times(1)).findOneByUsername(username);
+    }
+
+    @Test(expected=ResourceNotFoundException.class)
+    public void testGetUserAccountWillThrow() throws ResourceNotFoundException
+    {
+        final String username = "testUser";
+        final Optional<User> userObj = Optional.empty();
+
+        when(this.userRepository.findOneByUsername(username)).thenReturn(userObj);
+
+        this.userService.getUserAccount(username);
+        verify(this.userRepository, times(1)).findOneByUsername(username);
     }
 
 }
