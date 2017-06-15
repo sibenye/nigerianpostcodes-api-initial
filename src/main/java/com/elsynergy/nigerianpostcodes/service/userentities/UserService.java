@@ -2,7 +2,7 @@ package com.elsynergy.nigerianpostcodes.service.userentities;
 
 import com.elsynergy.nigerianpostcodes.mapper.AccountResponseMapper;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
-import com.elsynergy.nigerianpostcodes.model.request.RegisterUserRequest;
+import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
 import com.elsynergy.nigerianpostcodes.model.response.AccountResponse;
 import com.elsynergy.nigerianpostcodes.repo.userentities.PackageRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.RoleRepository;
@@ -32,7 +32,7 @@ public class UserService
     @Autowired
     private AccountResponseMapper accountResponseMapper;
 
-    public AccountResponse registerUser(final RegisterUserRequest request) {
+    public AccountResponse registerUser(final RegisterAccountRequest request) {
         final User user = new User(request);
 
         final Integer packageId = this.packageRepository.findOneByName(request.getPackageName().toString()).get().getId();

@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiParam;
  * @author silver.ibenye
  *
  */
-public class RegisterUserRequest
+public class RegisterAccountRequest
 {
     @ApiParam(value = "UserName.", required = true)
     @NotNull

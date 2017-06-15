@@ -6,7 +6,7 @@ import com.elsynergy.nigerianpostcodes.model.DAO.userentities.Role;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
-import com.elsynergy.nigerianpostcodes.model.request.RegisterUserRequest;
+import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
 import com.elsynergy.nigerianpostcodes.repo.userentities.PackageRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.RoleRepository;
 import com.elsynergy.nigerianpostcodes.repo.userentities.UserRepository;
@@ -47,7 +47,7 @@ public class UserServiceTest
     @Test
     public void test()
     {
-        final RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+        final RegisterAccountRequest registerUserRequest = new RegisterAccountRequest();
         registerUserRequest.setUsername("testUser");
         registerUserRequest.setPassword("1234");
         registerUserRequest.setPackageName(PackageEnum.BASIC);
