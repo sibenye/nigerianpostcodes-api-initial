@@ -26,6 +26,10 @@ public class RegisterUserRequest
     @NotNull
     private PackageEnum packageName = PackageEnum.BASIC;
 
+    @ApiParam(value = "Role")
+    @NotNull
+    private RoleEnum role = RoleEnum.USER;
+
     public String getUsername()
     {
         return this.username;
@@ -58,7 +62,12 @@ public class RegisterUserRequest
 
     public RoleEnum getRole()
     {
-        return RoleEnum.USER;
+        return this.role;
+    }
+
+    public void setRole(final RoleEnum role)
+    {
+        this.role = role;
     }
 
 }
