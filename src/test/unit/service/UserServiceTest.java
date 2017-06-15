@@ -1,6 +1,6 @@
 package service;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.userentities.Package;
+import com.elsynergy.nigerianpostcodes.model.DAO.userentities.PackageType;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.Role;
 import com.elsynergy.nigerianpostcodes.model.DAO.userentities.User;
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
@@ -48,7 +48,7 @@ public class UserServiceTest
         registerUserRequest.setPassword("1234");
         registerUserRequest.setPackageName(PackageEnum.BASIC);
 
-        final Optional<Package> packageObj = Optional.of(new Package());
+        final Optional<PackageType> packageObj = Optional.of(new PackageType());
         final Optional<Role> roleObj = Optional.of(new Role());
 
         when(this.packageRepository.findOneByName(anyString())).thenReturn(packageObj);

@@ -11,7 +11,8 @@ public class AccountResponse
 {
     private String username;
     private Boolean active;
-    private String packageName;
+    private String packageType;
+    private String role;
     private List<String> features;
 
     public String getUsername()
@@ -30,13 +31,13 @@ public class AccountResponse
     {
         this.active = active;
     }
-    public String getPackageName()
+    public String getPackageType()
     {
-        return this.packageName;
+        return this.packageType;
     }
-    public void setPackageName(final String packageName)
+    public void setPackageType(final String packageType)
     {
-        this.packageName = packageName;
+        this.packageType = packageType;
     }
     public List<String> getFeatures()
     {
@@ -45,6 +46,14 @@ public class AccountResponse
     public void setFeatures(final List<String> features)
     {
         this.features = features;
+    }
+    public String getRole()
+    {
+        return this.role;
+    }
+    public void setRole(final String role)
+    {
+        this.role = role;
     }
 
 }

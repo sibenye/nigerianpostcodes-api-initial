@@ -10,8 +10,8 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name = "packages")
-public class Package extends Audit
+@Table(name = "packagetypes")
+public class PackageType extends Audit
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,7 +40,7 @@ public class Package extends Audit
         )
     private Set<Feature> features;
 
-    public Package() {}
+    public PackageType() {}
 
     public Integer getId()
     {

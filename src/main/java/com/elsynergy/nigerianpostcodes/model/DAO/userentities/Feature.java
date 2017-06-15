@@ -22,7 +22,7 @@ public class Feature extends Audit
     private String name;
 
     @ManyToMany(mappedBy="features")
-    private Set<Package> packages;
+    private Set<PackageType> packageTypes;
 
     public Feature() {}
 
@@ -46,14 +46,14 @@ public class Feature extends Audit
         this.name = name;
     }
 
-    public Set<Package> getPackages()
+    public Set<PackageType> getPackageTypes()
     {
-        return this.packages;
+        return this.packageTypes;
     }
 
-    public void setPackages(final Set<Package> packages)
+    public void setPackageTypes(final Set<PackageType> packages)
     {
-        this.packages = packages;
+        this.packageTypes = packages;
     }
 
 }
