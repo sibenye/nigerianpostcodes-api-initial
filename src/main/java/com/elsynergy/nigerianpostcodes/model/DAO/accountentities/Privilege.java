@@ -1,4 +1,4 @@
-package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
+package com.elsynergy.nigerianpostcodes.model.DAO.accountentities;
 
 import java.util.Set;
 
@@ -10,8 +10,8 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name = "features")
-public class Feature extends Audit
+@Table(name = "privileges")
+public class Privilege extends Audit
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,10 +21,10 @@ public class Feature extends Audit
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy="features")
+    @ManyToMany(mappedBy="privileges")
     private Set<PackageType> packageTypes;
 
-    public Feature() {}
+    public Privilege() {}
 
     public Integer getId()
     {

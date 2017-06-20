@@ -5,6 +5,7 @@ import com.elsynergy.nigerianpostcodes.model.response.ApiErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -87,6 +88,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler
 
         return this.commonHandling(ex, new HttpHeaders(), HttpStatus.BAD_REQUEST, request, 100);
 
+    }
+
+    @ExceptionHandler({ AuthenticationServiceException.class })
+    public ResponseEntity<Object> handleAuthenticationException(
+            final AuthenticationServiceException ex, final WebRequest request)
+    {
+        return this.commonHandling(ex, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request, 401);
     }
 
     @ExceptionHandler({ ApiException.class })

@@ -1,6 +1,6 @@
-package com.elsynergy.nigerianpostcodes.repo.userentities;
+package com.elsynergy.nigerianpostcodes.repo.accountentities;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.userentities.PackageType;
+import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.PackageType;
 
 import org.springframework.data.repository.CrudRepository;
 

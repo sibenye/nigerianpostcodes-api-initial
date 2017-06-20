@@ -1,4 +1,4 @@
-package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
+package com.elsynergy.nigerianpostcodes.model.DAO.accountentities;
 
 import javax.persistence.*;
 

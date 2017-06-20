@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 @EnableJpaRepositories(basePackages = {
-        "com.elsynergy.nigerianpostcodes.repo.userentities"
+        "com.elsynergy.nigerianpostcodes.repo.accountentities"
 })
 public class AppConfig
 {

@@ -1,4 +1,4 @@
-package com.elsynergy.nigerianpostcodes.model.DAO.userentities;
+package com.elsynergy.nigerianpostcodes.model.DAO.accountentities;
 
 import java.util.Set;
 
@@ -30,15 +30,15 @@ public class PackageType extends Audit
     @Column(name = "allowextrarequests")
     private Boolean allowExtraRequests;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name="package_feature_links",
+            name="package_privilege_links",
             joinColumns=
                 @JoinColumn(name="packageid", referencedColumnName="id"),
             inverseJoinColumns=
-                @JoinColumn(name="featureid", referencedColumnName="id")
+                @JoinColumn(name="privilegeid", referencedColumnName="id")
         )
-    private Set<Feature> features;
+    private Set<Privilege> privileges;
 
     public PackageType() {}
 
@@ -92,14 +92,14 @@ public class PackageType extends Audit
         this.allowExtraRequests = allowExtraRequests;
     }
 
-    public Set<Feature> getFeatureSet()
+    public Set<Privilege> getPrivilegeSet()
     {
-        return this.features;
+        return this.privileges;
     }
 
-    public void setFeatureSet(final Set<Feature> featureSet)
+    public void setPrivilegeSet(final Set<Privilege> privilegeSet)
     {
-        this.features = featureSet;
+        this.privileges = privilegeSet;
     }
 
 }

@@ -4,5 +4,6 @@ public enum PackageEnum
 {
     BASIC,
     PLUS,
-    PREMIUM;
+    PREMIUM,
+    DOC_VIEW;
 }

@@ -14,13 +14,9 @@ import io.swagger.annotations.ApiParam;
  */
 public class RegisterAccountRequest
 {
-    @ApiParam(value = "UserName.", required = true)
+    @ApiParam(value = "Account Name.", required = true)
     @NotNull
-    private String username;
-
-    @ApiParam(value = "Password.", required = true)
-    @NotNull
-    private String password;
+    private String accountName;
 
     @ApiParam(value = "Package Name")
     @NotNull
@@ -30,24 +26,14 @@ public class RegisterAccountRequest
     @NotNull
     private RoleEnum role = RoleEnum.USER;
 
-    public String getUsername()
+    public String getAccountName()
     {
-        return this.username;
+        return this.accountName;
     }
 
-    public void setUsername(final String username)
+    public void setAccountName(final String accountName)
     {
-        this.username = username;
-    }
-
-    public String getPassword()
-    {
-        return this.password;
-    }
-
-    public void setPassword(final String password)
-    {
-        this.password = password;
+        this.accountName = accountName;
     }
 
     public PackageEnum getPackageName()
