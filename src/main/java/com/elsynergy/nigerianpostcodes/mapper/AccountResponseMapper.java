@@ -27,18 +27,19 @@ public class AccountResponseMapper implements IResponseMapper<Account, AccountRe
         accountResponse.setActive(toMap.getActive());
         accountResponse.setAccountKey(toMap.getAccountKey());
 
-        final PackageType packageType = toMap.getPackageType();
-        accountResponse.setPackageType(packageType.getName());
-
         accountResponse.setRole(toMap.getRole().getName());
 
-        final List<String> privilegeList = new ArrayList<>();
 
-        for (final Privilege privilege : packageType.getPrivilegeSet()) {
-            privilegeList.add(privilege.getName());
+        if (toMap.getPackageType() != null) {
+            final PackageType packageType = toMap.getPackageType();
+            accountResponse.setPackageType(packageType.getName());
+            final List<String> privilegeList = new ArrayList<>();
+
+            for (final Privilege privilege : packageType.getPrivilegeSet()) {
+                privilegeList.add(privilege.getName());
+            }
+            accountResponse.setPrivileges(privilegeList);
         }
-
-        accountResponse.setPrivileges(privilegeList);
 
         if (toMap.getAccountSubscription() != null) {
             final SubscriptionDetails subscriptionDetails = accountResponse.new SubscriptionDetails();
