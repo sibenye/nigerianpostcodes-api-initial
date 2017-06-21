@@ -18,12 +18,12 @@ public class RegisterAccountRequest
     @NotNull
     private String accountName;
 
-    @ApiParam(value = "Role", required = true)
+    @ApiParam(value = "Role", defaultValue="USER", required = true)
     @NotNull
     private RoleEnum role = RoleEnum.USER;
 
     @ApiParam(value = "Package Name", required = false)
-    private PackageEnum packageName = PackageEnum.BASIC;
+    private PackageEnum packageName;
 
     @ApiParam(value = "Duration of Subscription in Months.", required = false)
     private Integer durationInMonths;

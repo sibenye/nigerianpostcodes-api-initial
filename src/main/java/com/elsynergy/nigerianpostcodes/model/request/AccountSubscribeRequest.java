@@ -19,7 +19,7 @@ public class AccountSubscribeRequest
 
     @ApiParam(value = "Package Name", required = true)
     @NotNull
-    private PackageEnum packageName = PackageEnum.BASIC;
+    private PackageEnum packageName;
 
     @ApiParam(value = "Duration of Subscription in Months.", required = true)
     @NotNull
