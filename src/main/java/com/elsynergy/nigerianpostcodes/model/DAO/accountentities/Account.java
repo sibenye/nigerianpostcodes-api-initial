@@ -33,9 +33,13 @@ public class Account extends Audit
     @JoinColumn(name="roleid", nullable=false, updatable=false)
     private Role role;
 
-    @ManyToOne(optional=false)
-    @JoinColumn(name="packagetypeid", nullable=false, updatable=false)
+    @ManyToOne(optional=true)
+    @JoinColumn(name="packagetypeid")
     private PackageType packageType;
+
+    @OneToOne(optional=true)
+    @JoinColumn(name="subscriptionid")
+    private AccountSubscription accountSubscription;
 
     public Account() {
 
@@ -104,6 +108,16 @@ public class Account extends Audit
     public void setPackageType(final PackageType packageType)
     {
         this.packageType = packageType;
+    }
+
+    public AccountSubscription getAccountSubscription()
+    {
+        return this.accountSubscription;
+    }
+
+    public void setAccountSubscription(final AccountSubscription accountSubscription)
+    {
+        this.accountSubscription = accountSubscription;
     }
 
 }

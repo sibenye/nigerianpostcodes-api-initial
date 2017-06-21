@@ -2,9 +2,9 @@ package com.elsynergy.nigerianpostcodes.service.accountentities;
 
 import com.elsynergy.nigerianpostcodes.mapper.AccountResponseMapper;
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.Account;
+import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.AccountSubscription;
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.PackageType;
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.Role;
-import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.Subscription;
 import com.elsynergy.nigerianpostcodes.model.request.AccountSubscribeRequest;
 import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
 import com.elsynergy.nigerianpostcodes.model.response.AccountResponse;
@@ -13,6 +13,7 @@ import com.elsynergy.nigerianpostcodes.repo.accountentities.PackageRepository;
 import com.elsynergy.nigerianpostcodes.repo.accountentities.RoleRepository;
 import com.elsynergy.nigerianpostcodes.repo.accountentities.SubscriptionRepository;
 import com.elsynergy.nigerianpostcodes.service.DateTimeService;
+import com.elsynergy.nigerianpostcodes.web.exception.BadRequestException;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,23 +76,45 @@ public class AccountService
         return this.accountResponseMapper.map(account.get());
     }
 
-    public AccountResponse registerAccount(final RegisterAccountRequest request)
+    public AccountResponse registerAccount(final RegisterAccountRequest request) throws ResourceNotFoundException
     {
         final Account account = new Account(request);
         account.setAccountKey(this.getNextAccountKey());
 
-        final PackageType packageType = this.packageRepository.findOneByName(request.getPackageName().toString()).get();
-        account.setPackageType(packageType);
+        final Optional<Role> requestedRole = this.roleRepository.findOneByName(request.getRole().toString());
 
-        final Role role = this.roleRepository.findOneByName(request.getRole().toString()).get();
-        account.setRole(role);
+        if (!requestedRole.isPresent()) {
+            throw new ResourceNotFoundException(String.format("Role with name '%s' not found.", request.getRole()));
+        }
+
+        if (request.getPackageName() != null) {
+            final Optional<PackageType> requestedPackageType = this.packageRepository.findOneByName(request.getPackageName().toString());
+
+            if (!requestedPackageType.isPresent()) {
+                throw new ResourceNotFoundException(String.format("PackageType with name '%s' not found.", request.getPackageName()));
+            }
+
+            account.setPackageType(requestedPackageType.get());
+        }
+
+        if (request.getPackageName() != null
+                && request.getDurationInMonths() != null) {
+             this.setSubscriptionDetails(account, request.getDurationInMonths());
+             final AccountSubscription savedSubscription =  this.subscriptionRepository.save(account.getAccountSubscription());
+
+             account.setAccountSubscription(savedSubscription);
+        }
+
+        account.setRole(requestedRole.get());
 
         final Account registeredAccount =  this.accountRepository.save(account);
+
+
         return this.accountResponseMapper.map(registeredAccount);
 
     }
 
-    public AccountResponse subscribeAccount(final AccountSubscribeRequest request) throws ResourceNotFoundException
+    public AccountResponse subscribeAccount(final AccountSubscribeRequest request) throws ResourceNotFoundException, BadRequestException
     {
         //verify account name
         final Optional<Account> account = this.accountRepository.findOneByName(request.getAccountName());
@@ -101,8 +124,44 @@ public class AccountService
         }
 
         final Account existingAccount = account.get();
-        final Integer durationInMonths = request.getDurationInMonths();
-        final Integer allowedMonthlyRequests = existingAccount.getPackageType().getAllowedMonthlyRequests();
+
+        final Optional<PackageType> requestedPackageType = this.packageRepository.findOneByName(request.getPackageName().toString());
+
+        if (!requestedPackageType.isPresent()) {
+            throw new ResourceNotFoundException(String.format("PackageType with name '%s' not found.", request.getPackageName()));
+        }
+
+        if (!request.isRenewSubscription()
+                && existingAccount.getPackageType() != null
+                && existingAccount.getPackageType().getId() == requestedPackageType.get().getId()
+                && existingAccount.getAccountSubscription() != null
+                && !existingAccount.getAccountSubscription().isExpired()) {
+            throw new BadRequestException("Subscription exists and has not expired.");
+        }
+
+        if (existingAccount.getPackageType() == null
+                || existingAccount.getPackageType().getId() != requestedPackageType.get().getId()) {
+            existingAccount.setPackageType(requestedPackageType.get());
+        }
+
+        this.setSubscriptionDetails(existingAccount, request.getDurationInMonths());
+        final AccountSubscription savedSubscription =  this.subscriptionRepository.save(existingAccount.getAccountSubscription());
+
+        existingAccount.setAccountSubscription(savedSubscription);
+
+        final Account savedAccount =  this.accountRepository.save(existingAccount);
+
+        return this.accountResponseMapper.map(savedAccount);
+    }
+
+    private void setSubscriptionDetails(final Account account, final Integer durationInMonths)
+    {
+        if (account.getAccountSubscription() == null) {
+            final AccountSubscription subscription = new AccountSubscription();
+            account.setAccountSubscription(subscription);
+        }
+
+        final Integer allowedMonthlyRequests = account.getPackageType().getAllowedMonthlyRequests();
         final Integer numberOfAllowedRequests = allowedMonthlyRequests * durationInMonths;
 
         final Calendar currentCalendar = this.dateTimeService.getCurrentDateAndTime();
@@ -110,16 +169,11 @@ public class AccountService
         currentCalendar.add(Calendar.MONTH, durationInMonths);
         final Date endDate = currentCalendar.getTime();
 
-        final Subscription subscription = new Subscription();
-        subscription.setAccount(existingAccount);
-        subscription.setDurationInMonths(durationInMonths);
-        subscription.setNumberOfRequestsAllowed(numberOfAllowedRequests);
-        subscription.setStartDate(startDate);
-        subscription.setEndDate(endDate);
-
-        this.subscriptionRepository.save(subscription);
-
-        return this.accountResponseMapper.map(existingAccount);
+        account.getAccountSubscription().setDurationInMonths(durationInMonths);
+        account.getAccountSubscription().setNumberOfRequestsAllowed(numberOfAllowedRequests);
+        account.getAccountSubscription().setStartDate(startDate);
+        account.getAccountSubscription().setEndDate(endDate);
+        account.getAccountSubscription().setExpired(false);
     }
 
     private String getNextAccountKey()

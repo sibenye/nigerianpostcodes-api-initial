@@ -12,6 +12,7 @@ import com.elsynergy.nigerianpostcodes.repo.accountentities.RoleRepository;
 import com.elsynergy.nigerianpostcodes.repo.accountentities.SubscriptionRepository;
 import com.elsynergy.nigerianpostcodes.service.DateTimeService;
 import com.elsynergy.nigerianpostcodes.service.accountentities.AccountService;
+import com.elsynergy.nigerianpostcodes.web.exception.BadRequestException;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
 import org.junit.Before;
@@ -21,10 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -66,52 +64,180 @@ public class AccountServiceTest
 
     private DateTimeService dateTimeService;
 
+    private AccountSubscription subscription;
+
+    private Calendar dateNow;
+
     @Before
     public void setup()
     {
         this.dateTimeService = new DateTimeService();
+        this.dateNow = this.dateTimeService.getCurrentDateAndTime();
         this.getAccountObject();
     }
 
-    @Test
-    public void testSubscribeAccount() throws ResourceNotFoundException
+    @Test(expected=ResourceNotFoundException.class)
+    public void testSubscribeAccountWillThrowForNonExistingAccount() throws ResourceNotFoundException, BadRequestException
     {
         final AccountSubscribeRequest accountSubscribeRequest = new AccountSubscribeRequest();
         accountSubscribeRequest.setAccountName(this.account.getName());
         accountSubscribeRequest.setDurationInMonths(3);
 
-        final Calendar dateNow = this.dateTimeService.getCurrentDateAndTime();
+        when(this.accountRepository.findOneByName(this.account.getName()))
+        .thenReturn(Optional.empty());
+
+        this.accountService.subscribeAccount(accountSubscribeRequest);
+
+        verify(this.accountRepository, times(1)).findOneByName(this.account.getName());
+        verify(this.dateTimeServiceMock, times(0)).getCurrentDateAndTime();
+        verify(this.subscriptionRepository, times(0)).save(any(AccountSubscription.class));
+        verify(this.accountRepository, times(0)).save(any(Account.class));
+        verify(this.acctResponseMapper, times(0)).map(any(Account.class));
+    }
+
+    @Test(expected=ResourceNotFoundException.class)
+    public void testSubscribeAccountWillThrowForNonExistingPackage() throws ResourceNotFoundException, BadRequestException
+    {
+        final AccountSubscribeRequest accountSubscribeRequest = new AccountSubscribeRequest();
+        accountSubscribeRequest.setAccountName(this.account.getName());
+        accountSubscribeRequest.setDurationInMonths(3);
+        accountSubscribeRequest.setPackageName(PackageEnum.BASIC);
 
         when(this.accountRepository.findOneByName(this.account.getName()))
         .thenReturn(Optional.of(this.account));
-        when(this.dateTimeServiceMock.getCurrentDateAndTime()).thenReturn(dateNow);
+        when(this.packageRepository.findOneByName(PackageEnum.BASIC.toString()))
+        .thenReturn(Optional.empty());
+
+        this.accountService.subscribeAccount(accountSubscribeRequest);
+
+        verify(this.accountRepository, times(1)).findOneByName(this.account.getName());
+        verify(this.dateTimeServiceMock, times(0)).getCurrentDateAndTime();
+        verify(this.subscriptionRepository, times(0)).save(any(AccountSubscription.class));
+        verify(this.accountRepository, times(0)).save(any(Account.class));
+        verify(this.acctResponseMapper, times(0)).map(any(Account.class));
+    }
+
+    @Test(expected=BadRequestException.class)
+    public void testSubscribeAccountWillThrowBadRequest() throws ResourceNotFoundException, BadRequestException
+    {
+        final AccountSubscribeRequest accountSubscribeRequest = new AccountSubscribeRequest();
+        accountSubscribeRequest.setAccountName(this.account.getName());
+        accountSubscribeRequest.setDurationInMonths(3);
+        accountSubscribeRequest.setPackageName(PackageEnum.BASIC);
+
+        when(this.accountRepository.findOneByName(this.account.getName()))
+        .thenReturn(Optional.of(this.account));
+        when(this.packageRepository.findOneByName(PackageEnum.BASIC.toString()))
+        .thenReturn(Optional.of(this.account.getPackageType()));
+        when(this.dateTimeServiceMock.getCurrentDateAndTime()).thenReturn(this.dateNow);
+
+        this.accountService.subscribeAccount(accountSubscribeRequest);
+
+        verify(this.accountRepository, times(1)).findOneByName(this.account.getName());
+        verify(this.dateTimeServiceMock, times(0)).getCurrentDateAndTime();
+        verify(this.subscriptionRepository, times(1)).save(any(AccountSubscription.class));
+        verify(this.accountRepository, times(0)).save(any(Account.class));
+        verify(this.acctResponseMapper, times(0)).map(any(Account.class));
+    }
+
+    @Test
+    public void testSubscribeAccount() throws ResourceNotFoundException, BadRequestException
+    {
+        final AccountSubscribeRequest accountSubscribeRequest = new AccountSubscribeRequest();
+        accountSubscribeRequest.setAccountName(this.account.getName());
+        accountSubscribeRequest.setDurationInMonths(3);
+        accountSubscribeRequest.setPackageName(PackageEnum.BASIC);
+        accountSubscribeRequest.setRenewSubscription(true);
+
+        when(this.accountRepository.findOneByName(this.account.getName()))
+        .thenReturn(Optional.of(this.account));
+        when(this.packageRepository.findOneByName(PackageEnum.BASIC.toString()))
+        .thenReturn(Optional.of(this.account.getPackageType()));
+        when(this.dateTimeServiceMock.getCurrentDateAndTime()).thenReturn(this.dateNow);
 
         this.accountService.subscribeAccount(accountSubscribeRequest);
 
         verify(this.accountRepository, times(1)).findOneByName(this.account.getName());
         verify(this.dateTimeServiceMock, times(1)).getCurrentDateAndTime();
-        verify(this.subscriptionRepository, times(1)).save(any(Subscription.class));
+        verify(this.subscriptionRepository, times(1)).save(any(AccountSubscription.class));
+        verify(this.accountRepository, times(1)).save(any(Account.class));
         verify(this.acctResponseMapper, times(1)).map(any(Account.class));
     }
 
     @Test
-    public void testRegisterAccount()
+    public void testRegisterAccount() throws ResourceNotFoundException
     {
         final RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest();
         registerAccountRequest.setAccountName(this.account.getName());
         registerAccountRequest.setPackageName(PackageEnum.BASIC);
+        registerAccountRequest.setDurationInMonths(3);
 
-        final Optional<PackageType> packageObj = Optional.of(new PackageType());
-        final Optional<Role> roleObj = Optional.of(new Role());
-
-        when(this.packageRepository.findOneByName(anyString())).thenReturn(packageObj);
-        when(this.roleRepository.findOneByName(anyString())).thenReturn(roleObj);
+        when(this.packageRepository.findOneByName(anyString())).thenReturn(Optional.of(this.packageType));
+        when(this.roleRepository.findOneByName(anyString())).thenReturn(Optional.of(this.role));
+        when(this.dateTimeServiceMock.getCurrentDateAndTime()).thenReturn(this.dateNow);
 
         this.accountService.registerAccount(registerAccountRequest);
         verify(this.packageRepository, times(1)).findOneByName(registerAccountRequest.getPackageName().toString());
         verify(this.roleRepository, times(1)).findOneByName(RoleEnum.USER.toString());
         verify(this.accountRepository, times(1)).save(any(Account.class));
         verify(this.acctResponseMapper, times(1)).map(any(Account.class));
+        verify(this.subscriptionRepository, times(1)).save(any(AccountSubscription.class));
+    }
+
+    @Test
+    public void testRegisterAccountWillNotCallSubscriptionSave() throws ResourceNotFoundException
+    {
+        final RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest();
+        registerAccountRequest.setAccountName(this.account.getName());
+        registerAccountRequest.setPackageName(null);
+        registerAccountRequest.setDurationInMonths(null);
+
+        when(this.roleRepository.findOneByName(anyString())).thenReturn(Optional.of(this.role));
+
+        this.accountService.registerAccount(registerAccountRequest);
+        verify(this.packageRepository, times(0)).findOneByName(anyString());
+        verify(this.roleRepository, times(1)).findOneByName(RoleEnum.USER.toString());
+        verify(this.accountRepository, times(1)).save(any(Account.class));
+        verify(this.acctResponseMapper, times(1)).map(any(Account.class));
+        verify(this.subscriptionRepository, times(0)).save(any(AccountSubscription.class));
+    }
+
+    @Test(expected=ResourceNotFoundException.class)
+    public void testRegisterAccountWillThrowForNonExistentPackage() throws ResourceNotFoundException
+    {
+        final RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest();
+        registerAccountRequest.setAccountName(this.account.getName());
+        registerAccountRequest.setPackageName(PackageEnum.BASIC);
+        registerAccountRequest.setDurationInMonths(3);
+
+        when(this.packageRepository.findOneByName(PackageEnum.BASIC.toString())).thenReturn(Optional.empty());
+        when(this.roleRepository.findOneByName(anyString())).thenReturn(Optional.of(this.role));
+
+        this.accountService.registerAccount(registerAccountRequest);
+        verify(this.packageRepository, times(1)).findOneByName(registerAccountRequest.getPackageName().toString());
+        verify(this.roleRepository, times(1)).findOneByName(RoleEnum.USER.toString());
+        verify(this.accountRepository, times(0)).save(any(Account.class));
+        verify(this.acctResponseMapper, times(0)).map(any(Account.class));
+        verify(this.subscriptionRepository, times(0)).save(any(AccountSubscription.class));
+    }
+
+    @Test(expected=ResourceNotFoundException.class)
+    public void testRegisterAccountWillThrowForNonExistentRole() throws ResourceNotFoundException
+    {
+        final RegisterAccountRequest registerAccountRequest = new RegisterAccountRequest();
+        registerAccountRequest.setAccountName(this.account.getName());
+        registerAccountRequest.setPackageName(PackageEnum.BASIC);
+        registerAccountRequest.setRole(RoleEnum.USER);
+        registerAccountRequest.setDurationInMonths(3);
+
+        when(this.roleRepository.findOneByName(RoleEnum.USER.toString())).thenReturn(Optional.empty());
+
+        this.accountService.registerAccount(registerAccountRequest);
+        verify(this.packageRepository, times(0)).findOneByName(registerAccountRequest.getPackageName().toString());
+        verify(this.roleRepository, times(1)).findOneByName(RoleEnum.USER.toString());
+        verify(this.accountRepository, times(0)).save(any(Account.class));
+        verify(this.acctResponseMapper, times(0)).map(any(Account.class));
+        verify(this.subscriptionRepository, times(0)).save(any(AccountSubscription.class));
     }
 
     @Test
@@ -142,36 +268,45 @@ public class AccountServiceTest
 
     private void getAccountObject()
     {
-        final Privilege privilege = new Privilege();
-        privilege.setName("testFeature");
-        this.privilege = privilege;
+        this.privilege = new Privilege();
+        this.privilege.setName("testFeature");
 
         final Set<Privilege> privileges = new HashSet<>();
         privileges.add(this.privilege);
 
-        final PackageType packageType = new PackageType();
-        packageType.setId(2);
-        packageType.setName("testPackageType");
-        packageType.setAllowedMonthlyRequests(10);
-        packageType.setPrivilegeSet(privileges);
-        this.packageType = packageType;
+        this.packageType = new PackageType();
+        this.packageType.setId(2);
+        this.packageType.setName("testPackageType");
+        this.packageType.setPrivilegeSet(privileges);
+        this.packageType.setAllowedMonthlyRequests(300);
 
-        final Role role = new Role();
-        role.setId(3);
-        role.setName("testRole");
-        this.role = role;
+        this.role = new Role();
+        this.role.setId(3);
+        this.role.setName("testRole");
 
-        final Account account = new Account();
-        account.setId((long) 100);
-        account.setName("testAcct");
-        account.setActive(true);
-        account.setPackageType(this.packageType);
-        account.setRole(this.role);
-        account.setAccountKey("3ed5tHgn");
+        this.subscription = new AccountSubscription();
+        this.subscription.setId((long) 4);
+        this.subscription.setDurationInMonths(3);
+        this.subscription.setNumberOfRequestsAllowed(300);
 
-        this.account = account;
+        final Date startDate = this.dateNow.getTime();
+        this.subscription.setStartDate(startDate);
+
+        this.dateNow.add(Calendar.MONTH, 3);
+        final Date endDate = this.dateNow.getTime();
+        this.subscription.setEndDate(endDate);
+
+
+        this.account = new Account();
+        this.account.setId((long) 100);
+        this.account.setName("testUserName");
+        this.account.setActive(true);
+        this.account.setPackageType(this.packageType);
+        this.account.setRole(this.role);
+        this.account.setAccountKey("3ed5tHgn");
+        this.account.setAccountSubscription(this.subscription);
+
 
     }
-
 
 }

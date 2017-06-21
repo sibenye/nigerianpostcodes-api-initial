@@ -11,17 +11,13 @@ import javax.persistence.*;
 *
 */
 @Entity
-@Table(name = "subscriptions")
-public class Subscription
+@Table(name = "account_subscriptions")
+public class AccountSubscription
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
-
-    @OneToOne(optional=false)
-    @JoinColumn(name="accountid", nullable=false, updatable=false)
-    private Account account;
 
     @Column(name = "durationinmonths", nullable = false)
     private Integer durationInMonths;
@@ -49,16 +45,6 @@ public class Subscription
     public void setId(final Long id)
     {
         this.id = id;
-    }
-
-    public Account getAccount()
-    {
-        return this.account;
-    }
-
-    public void setAccount(final Account account)
-    {
-        this.account = account;
     }
 
     public Integer getDurationInMonths()

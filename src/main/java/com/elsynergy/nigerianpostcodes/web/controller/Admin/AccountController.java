@@ -4,6 +4,7 @@ import com.elsynergy.nigerianpostcodes.model.request.AccountSubscribeRequest;
 import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
 import com.elsynergy.nigerianpostcodes.model.response.AccountResponse;
 import com.elsynergy.nigerianpostcodes.service.accountentities.AccountService;
+import com.elsynergy.nigerianpostcodes.web.exception.BadRequestException;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,13 @@ public class AccountController
 
     @ApiOperation(value = "Register new Account")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public AccountResponse registerAccount(@Valid @ModelAttribute final RegisterAccountRequest request) {
+    public AccountResponse registerAccount(@Valid @ModelAttribute final RegisterAccountRequest request) throws ResourceNotFoundException {
         return this.accountService.registerAccount(request);
     }
 
     @ApiOperation(value = "Subscribe Account")
     @RequestMapping(value = "/subscribe", method = RequestMethod.POST)
-    public AccountResponse registerAccount(@Valid @ModelAttribute final AccountSubscribeRequest request) throws ResourceNotFoundException {
+    public AccountResponse registerAccount(@Valid @ModelAttribute final AccountSubscribeRequest request) throws ResourceNotFoundException, BadRequestException {
         return this.accountService.subscribeAccount(request);
     }
 

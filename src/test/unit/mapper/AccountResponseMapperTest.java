@@ -4,9 +4,6 @@ import com.elsynergy.nigerianpostcodes.mapper.AccountResponseMapper;
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.*;
 import com.elsynergy.nigerianpostcodes.model.response.AccountResponse;
 import com.elsynergy.nigerianpostcodes.model.response.AccountResponse.SubscriptionDetails;
-import com.elsynergy.nigerianpostcodes.repo.accountentities.PackageRepository;
-import com.elsynergy.nigerianpostcodes.repo.accountentities.RoleRepository;
-import com.elsynergy.nigerianpostcodes.repo.accountentities.SubscriptionRepository;
 import com.elsynergy.nigerianpostcodes.service.DateTimeService;
 
 import org.junit.Before;
@@ -25,21 +22,12 @@ import static org.mockito.Mockito.when;
 public class AccountResponseMapperTest
 {
     @Mock
-    private PackageRepository packageRepository;
-
-    @Mock
-    private RoleRepository roleRespository;
-
-    @Mock
-    private SubscriptionRepository subscriptionRepository;
+    private DateTimeService dateTimeServiceMock;
 
     @InjectMocks
     private AccountResponseMapper accountResponseMapper;
 
     private DateTimeService dateTimeService;
-
-    @Mock
-    private DateTimeService dateTimeServiceMock;
 
     private Account account;
 
@@ -49,10 +37,15 @@ public class AccountResponseMapperTest
 
     private Privilege privilege;
 
+    private AccountSubscription subscription;
+
+    private Calendar dateNow;
+
     @Before
     public void setup()
     {
         this.dateTimeService = new DateTimeService();
+        this.dateNow = this.dateTimeService.getCurrentDateAndTime();
         this.getAccountObject();
 
     }
@@ -60,21 +53,9 @@ public class AccountResponseMapperTest
     @Test
     public void test()
     {
+        final String startDateString = this.dateTimeService.getStringFormattedDate(this.subscription.getStartDate());
 
-        final Subscription subscription = new Subscription();
-        subscription.setAccount(this.account);
-        subscription.setDurationInMonths(3);
-        subscription.setNumberOfRequestsAllowed(300);
-
-        final Calendar dateNow = this.dateTimeService.getCurrentDateAndTime();
-        final Date startDate = dateNow.getTime();
-        final String startDateString = this.dateTimeService.getStringFormattedDate(startDate);
-        subscription.setStartDate(startDate);
-
-        dateNow.add(Calendar.MONTH, 3);
-        final Date endDate = dateNow.getTime();
-        final String endDateString = this.dateTimeService.getStringFormattedDate(endDate);
-        subscription.setEndDate(endDate);
+        final String endDateString = this.dateTimeService.getStringFormattedDate(this.subscription.getEndDate());
 
         final AccountResponse expectedAcctResponse = new AccountResponse();
         expectedAcctResponse.setUsername(this.account.getName());
@@ -85,16 +66,16 @@ public class AccountResponseMapperTest
         expectedAcctResponse.setAccountKey(this.account.getAccountKey());
 
         final SubscriptionDetails expectedSubscriptionDetails = expectedAcctResponse.new SubscriptionDetails();
-        expectedSubscriptionDetails.setDurationInMonths(3);
-        expectedSubscriptionDetails.setNumberOfRequestsAllowed(300);
+        expectedSubscriptionDetails.setDurationInMonths(this.subscription.getDurationInMonths());
+        expectedSubscriptionDetails.setNumberOfRequestsAllowed(this.subscription.getNumberOfRequestsAllowed());
         expectedSubscriptionDetails.setStartDate(startDateString);
         expectedSubscriptionDetails.setEndDate(endDateString);
         expectedAcctResponse.setSubscriptionDetails(expectedSubscriptionDetails);
 
-        when(this.subscriptionRepository.findOneByAccountId(this.account.getId())).thenReturn(Optional.of(subscription));
-        when(this.dateTimeServiceMock.getCurrentDateAndTime()).thenReturn(dateNow);
-        when(this.dateTimeServiceMock.getStringFormattedDate(startDate)).thenReturn(startDateString);
-        when(this.dateTimeServiceMock.getStringFormattedDate(endDate)).thenReturn(endDateString);
+
+        when(this.dateTimeServiceMock.getCurrentDateAndTime()).thenReturn(this.dateNow);
+        when(this.dateTimeServiceMock.getStringFormattedDate(this.subscription.getStartDate())).thenReturn(startDateString);
+        when(this.dateTimeServiceMock.getStringFormattedDate(this.subscription.getEndDate())).thenReturn(endDateString);
 
         final AccountResponse actualAcctResponse = this.accountResponseMapper.map(this.account);
 
@@ -119,6 +100,7 @@ public class AccountResponseMapperTest
     @Test
     public void testWithNullSubscription()
     {
+        this.account.setAccountSubscription(null);
         final AccountResponse expectedAcctResponse = new AccountResponse();
         expectedAcctResponse.setUsername(this.account.getName());
         expectedAcctResponse.setActive(this.account.getActive());
@@ -126,8 +108,6 @@ public class AccountResponseMapperTest
         expectedAcctResponse.setRole(this.role.getName());
         expectedAcctResponse.setPrivileges(Arrays.asList(this.privilege.getName()));
         expectedAcctResponse.setAccountKey(this.account.getAccountKey());
-
-        when(this.subscriptionRepository.findOneByAccountId(this.account.getId())).thenReturn(Optional.empty());
 
         final AccountResponse actualAcctResponse = this.accountResponseMapper.map(this.account);
 
@@ -144,33 +124,44 @@ public class AccountResponseMapperTest
 
     private void getAccountObject()
     {
-        final Privilege privilege = new Privilege();
-        privilege.setName("testFeature");
-        this.privilege = privilege;
+        this.privilege = new Privilege();
+        this.privilege.setName("testFeature");
 
         final Set<Privilege> privileges = new HashSet<>();
         privileges.add(this.privilege);
 
-        final PackageType packageType = new PackageType();
-        packageType.setId(2);
-        packageType.setName("testPackageType");
-        packageType.setPrivilegeSet(privileges);
-        this.packageType = packageType;
+        this.packageType = new PackageType();
+        this.packageType.setId(2);
+        this.packageType.setName("testPackageType");
+        this.packageType.setPrivilegeSet(privileges);
+        this.packageType.setAllowedMonthlyRequests(300);
 
-        final Role role = new Role();
-        role.setId(3);
-        role.setName("testRole");
-        this.role = role;
+        this.role = new Role();
+        this.role.setId(3);
+        this.role.setName("testRole");
 
-        final Account account = new Account();
-        account.setId((long) 100);
-        account.setName("testUserName");
-        account.setActive(true);
-        account.setPackageType(this.packageType);
-        account.setRole(this.role);
-        account.setAccountKey("3ed5tHgn");
+        this.subscription = new AccountSubscription();
+        this.subscription.setId((long) 4);
+        this.subscription.setDurationInMonths(3);
+        this.subscription.setNumberOfRequestsAllowed(300);
 
-        this.account = account;
+        final Date startDate = this.dateNow.getTime();
+        this.subscription.setStartDate(startDate);
+
+        this.dateNow.add(Calendar.MONTH, 3);
+        final Date endDate = this.dateNow.getTime();
+        this.subscription.setEndDate(endDate);
+
+
+        this.account = new Account();
+        this.account.setId((long) 100);
+        this.account.setName("testUserName");
+        this.account.setActive(true);
+        this.account.setPackageType(this.packageType);
+        this.account.setRole(this.role);
+        this.account.setAccountKey("3ed5tHgn");
+        this.account.setAccountSubscription(this.subscription);
+
 
     }
 

@@ -18,13 +18,15 @@ public class RegisterAccountRequest
     @NotNull
     private String accountName;
 
-    @ApiParam(value = "Package Name")
-    @NotNull
-    private PackageEnum packageName = PackageEnum.BASIC;
-
-    @ApiParam(value = "Role")
+    @ApiParam(value = "Role", required = true)
     @NotNull
     private RoleEnum role = RoleEnum.USER;
+
+    @ApiParam(value = "Package Name", required = false)
+    private PackageEnum packageName = PackageEnum.BASIC;
+
+    @ApiParam(value = "Duration of Subscription in Months.", required = false)
+    private Integer durationInMonths;
 
     public String getAccountName()
     {
@@ -54,6 +56,16 @@ public class RegisterAccountRequest
     public void setRole(final RoleEnum role)
     {
         this.role = role;
+    }
+
+    public Integer getDurationInMonths()
+    {
+        return this.durationInMonths;
+    }
+
+    public void setDurationInMonths(final Integer durationInMonths)
+    {
+        this.durationInMonths = durationInMonths;
     }
 
 }
