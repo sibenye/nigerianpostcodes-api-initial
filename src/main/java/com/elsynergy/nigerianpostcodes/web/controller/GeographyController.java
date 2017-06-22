@@ -1,15 +1,11 @@
 package com.elsynergy.nigerianpostcodes.web.controller;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.LGA;
-import com.elsynergy.nigerianpostcodes.model.DAO.State;
 import com.elsynergy.nigerianpostcodes.model.response.ApiResponse;
 import com.elsynergy.nigerianpostcodes.service.FindService;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -34,8 +30,7 @@ public class GeographyController
             @Valid @RequestParam ( required = false ) final Integer stateId
             ) throws ResourceNotFoundException
     {
-        final List<State> result = this.findService.getStates(stateId);
-        return new ApiResponse(result);
+        return new ApiResponse(this.findService.getStates(stateId));
     }
 
     @ApiOperation(value = "Retrieve LGAs.")
@@ -45,8 +40,7 @@ public class GeographyController
             @Valid @RequestParam ( required = false ) final Integer lgaId
             ) throws ResourceNotFoundException
     {
-        final List<LGA> result = this.findService.getLGAs(stateId, lgaId);
-        return new ApiResponse(result);
+        return new ApiResponse(this.findService.getLGAs(stateId, lgaId));
     }
 
 }

@@ -2,7 +2,7 @@ package com.elsynergy.nigerianpostcodes.model.request;
 
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import io.swagger.annotations.ApiParam;
 
@@ -14,15 +14,15 @@ import io.swagger.annotations.ApiParam;
 public class AccountSubscribeRequest
 {
     @ApiParam(value = "Account Name.", required = true)
-    @NotNull
+    @NotEmpty
     private String accountName;
 
     @ApiParam(value = "Package Name", required = true)
-    @NotNull
+    @NotEmpty
     private PackageEnum packageName;
 
     @ApiParam(value = "Duration of Subscription in Months.", required = true)
-    @NotNull
+    @NotEmpty
     private Integer durationInMonths;
 
     @ApiParam(value = "Renew Subscription?", required = false)

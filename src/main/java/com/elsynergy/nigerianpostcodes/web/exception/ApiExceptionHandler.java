@@ -1,6 +1,7 @@
 package com.elsynergy.nigerianpostcodes.web.exception;
 
-import com.elsynergy.nigerianpostcodes.model.response.ApiErrorResponse;
+import com.elsynergy.nigerianpostcodes.model.response.ErrorResponse;
+import com.elsynergy.nigerianpostcodes.model.response.ApiResponse;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -115,9 +116,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler
 
         final String localizedMessage = ex.getLocalizedMessage() == null ?
                 CodeMessage.getMessage(errorCode) : ex.getLocalizedMessage();
-       final ApiErrorResponse apiErrorResponse =
-         new ApiErrorResponse(errorCode, localizedMessage, errors);
-       return this.handleExceptionInternal(ex, apiErrorResponse, headers, status, request);
+       final ErrorResponse apiErrorResponse =
+         new ErrorResponse(errorCode, localizedMessage, errors);
+       final ApiResponse apiResponse = new ApiResponse(apiErrorResponse, false);
+       return this.handleExceptionInternal(ex, apiResponse, headers, status, request);
 
     }
 

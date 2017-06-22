@@ -7,7 +7,7 @@ import java.util.List;
  * @author silver.ibenye
  *
  */
-public class AccountResponse
+public class AccountResponse extends BaseResponse
 {
     private String accountName;
 
@@ -22,6 +22,8 @@ public class AccountResponse
     private List<String> privileges;
 
     private SubscriptionDetails subscriptionDetails;
+
+    private List<String> allowedIpAddresses;
 
     public class SubscriptionDetails
     {
@@ -166,6 +168,16 @@ public class AccountResponse
     public void setSubscriptionDetails(final SubscriptionDetails subscriptionDetails)
     {
         this.subscriptionDetails = subscriptionDetails;
+    }
+
+    public List<String> getAllowedIpAddresses()
+    {
+        return this.allowedIpAddresses;
+    }
+
+    public void setAllowedIpAddresses(final List<String> allowedIpAddresses)
+    {
+        this.allowedIpAddresses = allowedIpAddresses;
     }
 
 }

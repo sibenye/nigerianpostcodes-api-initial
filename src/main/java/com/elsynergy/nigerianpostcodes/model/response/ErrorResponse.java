@@ -3,7 +3,7 @@ package com.elsynergy.nigerianpostcodes.model.response;
 import java.util.Arrays;
 import java.util.List;
 
-public class ApiErrorResponse
+public class ErrorResponse extends BaseResponse
 {
     private final Integer errorCode;
 
@@ -11,14 +11,14 @@ public class ApiErrorResponse
 
     private final List<String> messageDetails;
 
-    public ApiErrorResponse(final Integer errorCode, final String message, final List<String> messageDetails)
+    public ErrorResponse(final Integer errorCode, final String message, final List<String> messageDetails)
     {
         this.errorCode = errorCode;
         this.message = message;
         this.messageDetails = messageDetails;
     }
 
-    public ApiErrorResponse(final Integer errorCode, final String message, final String messageDetail)
+    public ErrorResponse(final Integer errorCode, final String message, final String messageDetail)
     {
         this.errorCode = errorCode;
         this.message = message;

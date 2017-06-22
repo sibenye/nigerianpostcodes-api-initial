@@ -1,41 +1,43 @@
 package com.elsynergy.nigerianpostcodes.model.response;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.BaseDAO;
-
-import java.util.Arrays;
-import java.util.List;
-
 public class ApiResponse
 {
+    private static String SUCCESS_STATUS = "success";
+    private static String FAIL_STATUS = "failure";
+    private String status;
 
-    private Integer numberOfResults;
-    private List<? extends BaseDAO> content;
+    private BaseResponse response;
 
-    public ApiResponse(final List<? extends BaseDAO> content) {
-        this.content = content;
-        this.numberOfResults = content != null ? content.size() : 0;
-    }
-
-    public ApiResponse(final BaseDAO content) {
-        this.content = Arrays.asList(content);
-        this.numberOfResults = content != null ? 1 : 0;
+    public ApiResponse(final BaseResponse response)
+    {
+        this.response = response;
+        this.status = SUCCESS_STATUS;
     }
 
-    public List<? extends BaseDAO> getContent()
+    public ApiResponse(final BaseResponse response, final boolean success)
     {
-        return this.content;
+        this.response = response;
+        this.status = success ? SUCCESS_STATUS : FAIL_STATUS;
     }
-    public void setContent(final List<? extends BaseDAO> content)
+
+    public String getStatus()
     {
-        this.content = content;
+        return this.status;
     }
-    public Integer getNumberOfResults()
+
+    public void setStatus(final String status)
     {
-        return this.numberOfResults;
+        this.status = status;
     }
-    public void setNumberOfResults(final Integer numberOfResults)
+
+    public BaseResponse getResponse()
     {
-        this.numberOfResults = numberOfResults;
+        return this.response;
+    }
+
+    public void setResponse(final BaseResponse response)
+    {
+        this.response = response;
     }
 
 }

@@ -37,6 +37,11 @@ public class AccountSubscription
     @Column(name = "expired")
     private boolean isExpired;
 
+    public AccountSubscription()
+    {
+
+    }
+
     public Long getId()
     {
         return this.id;

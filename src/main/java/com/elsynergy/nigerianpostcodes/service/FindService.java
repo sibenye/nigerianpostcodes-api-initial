@@ -1,6 +1,7 @@
 package com.elsynergy.nigerianpostcodes.service;
 
 import com.elsynergy.nigerianpostcodes.model.DAO.*;
+import com.elsynergy.nigerianpostcodes.model.response.ApiFindResponse;
 import com.elsynergy.nigerianpostcodes.repo.FindRepo;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
@@ -31,7 +32,7 @@ public class FindService
      * @return List<RuralPostcode>
      * @throws ResourceNotFoundException
      */
-    public List<RuralPostcode> getRuralPostcodes(final Integer stateId, final Integer lgaId, final String district, final String town) throws ResourceNotFoundException
+    public ApiFindResponse getRuralPostcodes(final Integer stateId, final Integer lgaId, final String district, final String town) throws ResourceNotFoundException
     {
         final List<RuralPostcode> ruralPostcodes = this.postcodeFindRepo.getRuralPostcodes(stateId, lgaId, district, town);
 
@@ -43,7 +44,7 @@ public class FindService
             throw new ResourceNotFoundException(message);
         }
 
-        return ruralPostcodes;
+        return new ApiFindResponse(ruralPostcodes);
     }
 
     /**
@@ -56,7 +57,7 @@ public class FindService
      * @return List<UrbanPostcode>
      * @throws ResourceNotFoundException
      */
-    public List<UrbanPostcode> getUrbanPostcodes(final Integer stateId, final String town, final String area, final String street) throws ResourceNotFoundException
+    public ApiFindResponse getUrbanPostcodes(final Integer stateId, final String town, final String area, final String street) throws ResourceNotFoundException
     {
         final List<UrbanPostcode> urbanPostcodes = this.postcodeFindRepo.getUrbanPostcodes(stateId, town, area, street);
 
@@ -67,7 +68,7 @@ public class FindService
             throw new ResourceNotFoundException(message);
         }
 
-        return urbanPostcodes;
+        return new ApiFindResponse(urbanPostcodes);
     }
 
     /**
@@ -79,7 +80,7 @@ public class FindService
      * @return List<FacilityPostcode>
      * @throws ResourceNotFoundException
      */
-    public List<FacilityPostcode> getFacilityPostcodes(final Integer stateId, final Integer lgaId, final String facility) throws ResourceNotFoundException
+    public ApiFindResponse getFacilityPostcodes(final Integer stateId, final Integer lgaId, final String facility) throws ResourceNotFoundException
     {
         final List<FacilityPostcode> facilityPostcodes = this.postcodeFindRepo.getFacilityPostcodes(stateId, lgaId, facility);
 
@@ -90,7 +91,7 @@ public class FindService
             throw new ResourceNotFoundException(message);
         }
 
-        return facilityPostcodes;
+        return new ApiFindResponse(facilityPostcodes);
     }
 
     /**
@@ -100,7 +101,7 @@ public class FindService
      * @return List<State>
      * @throws ResourceNotFoundException
      */
-    public List<State> getStates(final Integer stateId) throws ResourceNotFoundException
+    public ApiFindResponse getStates(final Integer stateId) throws ResourceNotFoundException
     {
         final List<State> states = this.postcodeFindRepo.getStates(stateId);
 
@@ -109,7 +110,7 @@ public class FindService
             throw new ResourceNotFoundException(message);
         }
 
-        return states;
+        return new ApiFindResponse(states);
     }
 
     /**
@@ -120,7 +121,7 @@ public class FindService
      * @return
      * @throws ResourceNotFoundException
      */
-    public List<LGA> getLGAs(final Integer stateId, final Integer lgaId) throws ResourceNotFoundException
+    public ApiFindResponse getLGAs(final Integer stateId, final Integer lgaId) throws ResourceNotFoundException
     {
         final List<LGA> lgas = this.postcodeFindRepo.getLGAs(stateId, lgaId);
 
@@ -129,7 +130,7 @@ public class FindService
             throw new ResourceNotFoundException(message);
         }
 
-        return lgas;
+        return new ApiFindResponse(lgas);
     }
 
 

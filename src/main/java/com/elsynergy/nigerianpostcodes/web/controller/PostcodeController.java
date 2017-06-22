@@ -1,16 +1,11 @@
 package com.elsynergy.nigerianpostcodes.web.controller;
 
-import com.elsynergy.nigerianpostcodes.model.DAO.FacilityPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.RuralPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.UrbanPostcode;
 import com.elsynergy.nigerianpostcodes.model.response.ApiResponse;
 import com.elsynergy.nigerianpostcodes.service.FindService;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -38,8 +33,7 @@ public class PostcodeController
             @Valid @RequestParam ( required = false ) final String town
             ) throws ResourceNotFoundException
     {
-        final List<RuralPostcode> result = this.findService.getRuralPostcodes(stateId, lgaId, district, town);
-        return new ApiResponse(result);
+        return new ApiResponse(this.findService.getRuralPostcodes(stateId, lgaId, district, town));
     }
 
 
@@ -52,8 +46,7 @@ public class PostcodeController
             @Valid @RequestParam  ( required = false ) final String street
             ) throws ResourceNotFoundException
     {
-        final List<UrbanPostcode> result = this.findService.getUrbanPostcodes(stateId, town, area, street);
-        return new ApiResponse(result);
+        return new ApiResponse(this.findService.getUrbanPostcodes(stateId, town, area, street));
     }
 
     @ApiOperation(value = "Retrieve Facility Postcodes.")
@@ -64,8 +57,7 @@ public class PostcodeController
             @Valid @RequestParam ( required = false ) final String facility
             ) throws ResourceNotFoundException
     {
-        final List<FacilityPostcode> result = this.findService.getFacilityPostcodes(stateId, lgaId, facility);
-        return new ApiResponse(result);
+        return new ApiResponse(this.findService.getFacilityPostcodes(stateId, lgaId, facility));
     }
 
 }

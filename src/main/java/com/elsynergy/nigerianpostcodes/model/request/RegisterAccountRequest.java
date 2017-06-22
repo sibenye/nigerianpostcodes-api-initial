@@ -3,7 +3,7 @@ package com.elsynergy.nigerianpostcodes.model.request;
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
 
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import io.swagger.annotations.ApiParam;
 
@@ -15,11 +15,11 @@ import io.swagger.annotations.ApiParam;
 public class RegisterAccountRequest
 {
     @ApiParam(value = "Account Name.", required = true)
-    @NotNull
+    @NotEmpty
     private String accountName;
 
     @ApiParam(value = "Role", defaultValue="USER", required = true)
-    @NotNull
+    @NotEmpty
     private RoleEnum role = RoleEnum.USER;
 
     @ApiParam(value = "Package Name", required = false)
@@ -27,6 +27,9 @@ public class RegisterAccountRequest
 
     @ApiParam(value = "Duration of Subscription in Months.", required = false)
     private Integer durationInMonths;
+
+    @ApiParam(value = "Restrict access to these comma seperated ipAddresses.", required = false)
+    private String allowedIpAddresses;
 
     public String getAccountName()
     {
@@ -66,6 +69,16 @@ public class RegisterAccountRequest
     public void setDurationInMonths(final Integer durationInMonths)
     {
         this.durationInMonths = durationInMonths;
+    }
+
+    public String getAllowedIpAddresses()
+    {
+        return this.allowedIpAddresses;
+    }
+
+    public void setAllowedIpAddresses(final String allowedIpAddresses)
+    {
+        this.allowedIpAddresses = allowedIpAddresses;
     }
 
 }

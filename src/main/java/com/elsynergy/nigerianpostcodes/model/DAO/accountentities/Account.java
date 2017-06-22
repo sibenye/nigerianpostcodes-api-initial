@@ -4,6 +4,8 @@ package com.elsynergy.nigerianpostcodes.model.DAO.accountentities;
 
 import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
 
+import java.util.Set;
+
 import javax.persistence.*;
 
 /**
@@ -40,6 +42,10 @@ public class Account extends Audit
     @OneToOne(optional=true)
     @JoinColumn(name="subscriptionid")
     private AccountSubscription accountSubscription;
+
+    @OneToMany
+    @JoinColumn(name="accountid")
+    private Set<AccountIpAccess> accountIpAccesses;
 
     public Account() {
 
@@ -118,6 +124,16 @@ public class Account extends Audit
     public void setAccountSubscription(final AccountSubscription accountSubscription)
     {
         this.accountSubscription = accountSubscription;
+    }
+
+    public Set<AccountIpAccess> getAccountIpAccesses()
+    {
+        return this.accountIpAccesses;
+    }
+
+    public void setAccountIpAccesses(final Set<AccountIpAccess> accountIpAccesses)
+    {
+        this.accountIpAccesses = accountIpAccesses;
     }
 
 }

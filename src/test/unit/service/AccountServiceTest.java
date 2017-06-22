@@ -4,12 +4,10 @@ import com.elsynergy.nigerianpostcodes.mapper.AccountResponseMapper;
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.*;
 import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
+import com.elsynergy.nigerianpostcodes.model.request.AccountIpAccessRequest;
 import com.elsynergy.nigerianpostcodes.model.request.AccountSubscribeRequest;
 import com.elsynergy.nigerianpostcodes.model.request.RegisterAccountRequest;
-import com.elsynergy.nigerianpostcodes.repo.accountentities.AccountRepository;
-import com.elsynergy.nigerianpostcodes.repo.accountentities.PackageRepository;
-import com.elsynergy.nigerianpostcodes.repo.accountentities.RoleRepository;
-import com.elsynergy.nigerianpostcodes.repo.accountentities.SubscriptionRepository;
+import com.elsynergy.nigerianpostcodes.repo.accountentities.*;
 import com.elsynergy.nigerianpostcodes.service.DateTimeService;
 import com.elsynergy.nigerianpostcodes.service.accountentities.AccountService;
 import com.elsynergy.nigerianpostcodes.web.exception.BadRequestException;
@@ -25,6 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.*;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anySet;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,6 +50,9 @@ public class AccountServiceTest
     @Mock
     private SubscriptionRepository subscriptionRepository;
 
+    @Mock
+    private AccountIpAccessRepository accountIpAccessRepository;
+
     @InjectMocks
     private AccountService accountService;
 
@@ -74,6 +76,42 @@ public class AccountServiceTest
         this.dateTimeService = new DateTimeService();
         this.dateNow = this.dateTimeService.getCurrentDateAndTime();
         this.getAccountObject();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testUnLinkIpAccess() throws ResourceNotFoundException
+    {
+        final AccountIpAccessRequest accountIpAccessRequest = new AccountIpAccessRequest();
+        accountIpAccessRequest.setAccountName(this.account.getName());
+        accountIpAccessRequest.setAllowedIpAddresses("10.76.222.12,10.76.222.12");
+
+        when(this.accountRepository.findOneByName(this.account.getName()))
+        .thenReturn(Optional.of(this.account));
+
+        this.accountService.unlinkIpAccess(accountIpAccessRequest);
+
+        verify(this.accountRepository, times(1)).findOneByName(this.account.getName());
+        verify(this.accountIpAccessRepository, times(1)).delete(anySet());
+        verify(this.acctResponseMapper, times(0)).map(any(Account.class));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testLinkIpAccess() throws ResourceNotFoundException
+    {
+        final AccountIpAccessRequest accountIpAccessRequest = new AccountIpAccessRequest();
+        accountIpAccessRequest.setAccountName(this.account.getName());
+        accountIpAccessRequest.setAllowedIpAddresses("10.76.222.12,10.76.222.12");
+
+        when(this.accountRepository.findOneByName(this.account.getName()))
+        .thenReturn(Optional.of(this.account));
+
+        this.accountService.linkIpAccess(accountIpAccessRequest);
+
+        verify(this.accountRepository, times(1)).findOneByName(this.account.getName());
+        verify(this.accountIpAccessRepository, times(1)).save(anySet());
+        verify(this.acctResponseMapper, times(0)).map(any(Account.class));
     }
 
     @Test(expected=ResourceNotFoundException.class)

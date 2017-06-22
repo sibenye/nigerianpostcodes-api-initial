@@ -1,6 +1,7 @@
 package com.elsynergy.nigerianpostcodes.mapper;
 
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.Account;
+import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.AccountIpAccess;
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.PackageType;
 import com.elsynergy.nigerianpostcodes.model.DAO.accountentities.Privilege;
 import com.elsynergy.nigerianpostcodes.model.response.AccountResponse;
@@ -50,6 +51,16 @@ public class AccountResponseMapper implements IResponseMapper<Account, AccountRe
             subscriptionDetails.setEndDate(this.dateTimeService.getStringFormattedDate(toMap.getAccountSubscription().getEndDate()));
             subscriptionDetails.setExpired(toMap.getAccountSubscription().isExpired());
             accountResponse.setSubscriptionDetails(subscriptionDetails);
+        }
+
+        if (toMap.getAccountIpAccesses() != null) {
+            final List<String> allowedIpAddresses = new ArrayList<>();
+
+            for (final AccountIpAccess accountIpAccess : toMap.getAccountIpAccesses()) {
+                allowedIpAddresses.add(accountIpAccess.getIpAddress());
+            }
+
+            accountResponse.setAllowedIpAddresses(allowedIpAddresses);
         }
 
         return accountResponse;
