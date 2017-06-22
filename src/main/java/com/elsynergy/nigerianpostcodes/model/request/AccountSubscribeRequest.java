@@ -21,12 +21,11 @@ public class AccountSubscribeRequest
     @NotEmpty
     private PackageEnum packageName;
 
-    @ApiParam(value = "Duration of Subscription in Months.", required = true)
-    @NotEmpty
-    private Integer durationInMonths;
+    @ApiParam(value = "Duration of Subscription in Months.", defaultValue="1", required = false)
+    private Integer durationInMonths = 1;
 
-    @ApiParam(value = "Renew Subscription?", required = false)
-    private boolean renewSubscription;
+    @ApiParam(value = "Renew Subscription?", defaultValue="false", required = false)
+    private boolean renewSubscription = false;
 
     public String getAccountName()
     {
