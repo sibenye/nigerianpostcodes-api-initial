@@ -1,5 +1,6 @@
 package com.elsynergy.nigerianpostcodes.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -8,7 +9,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class CorsFilter implements Filter {
+public class CorsFilter implements Filter
+{
+    @Autowired
+    private AppProperties properties;
 
     @Override
     public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
@@ -16,7 +20,7 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with, " + this.properties.getApiKeyName());
         chain.doFilter(req, res);
     }
 
