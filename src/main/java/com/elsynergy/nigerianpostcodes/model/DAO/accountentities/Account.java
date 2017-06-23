@@ -43,7 +43,7 @@ public class Account extends Audit
     @JoinColumn(name="subscriptionid")
     private AccountSubscription accountSubscription;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="accountid")
     private Set<AccountIpAccess> accountIpAccesses;
 

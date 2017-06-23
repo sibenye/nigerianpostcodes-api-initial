@@ -5,6 +5,7 @@ import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
 import com.elsynergy.nigerianpostcodes.service.DateTimeService;
 
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,7 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.authentication.www.DigestAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.Date;
@@ -25,11 +27,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ApiKeyAuthenticationFilter extends UsernamePasswordAuthenticationFilter
+public class ApiKeyAuthenticationFilter extends DigestAuthenticationFilter
 {
     private final UserCache userCache = new NullUserCache();
     private final CurrentUserDetailsService currentUserDetailsService;
     private final DateTimeService dateTimeService;
+
+    private final AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
     public ApiKeyAuthenticationFilter(final CurrentUserDetailsService currentUserDetailsService)
     {
@@ -48,7 +52,9 @@ public class ApiKeyAuthenticationFilter extends UsernamePasswordAuthenticationFi
         final String apiKey = request.getHeader("NPC-API-KEY");
 
         if (apiKey == null) {
-            throw new AuthenticationServiceException("API Key is required.");
+            chain.doFilter(request, response);
+
+            return;
         }
 
         // lookup account by api key
@@ -66,6 +72,9 @@ public class ApiKeyAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         // enforce access rules
         this.enforceAccessRules(currentUserDetails, request);
+
+        //update request count
+        this.currentUserDetailsService.updateRequestCount();
 
         final Authentication authentication = this.createSuccessfulAuthentication(request, currentUserDetails);
         final SecurityContext context = SecurityContextHolder.createEmptyContext();

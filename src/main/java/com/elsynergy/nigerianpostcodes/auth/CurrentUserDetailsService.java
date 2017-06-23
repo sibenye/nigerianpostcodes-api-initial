@@ -58,4 +58,14 @@ public class CurrentUserDetailsService implements UserDetailsService
         }
     }
 
+    public void updateRequestCount()
+    {
+        try {
+            this.accountService.updateRequestCount(this.currentUserDetails.getAccountId());
+        } catch (final Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
 }

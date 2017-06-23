@@ -11,7 +11,7 @@ import java.util.Set;
 public class CurrentAccountDetails extends org.springframework.security.core.userdetails.User
 {
 
-
+    private Long accountId;
     private boolean active;
     private String packageType;
     private String role;
@@ -28,6 +28,7 @@ public class CurrentAccountDetails extends org.springframework.security.core.use
         super(account.getName(),
                 account.getAccountKey(),
                 AuthorityUtils.createAuthorityList(account.getRole().getName()));
+        this.accountId = account.getId();
         this.active = account.getActive();
         this.role = account.getRole().getName();
         this.packageType = account.getPackageType().getName();
@@ -51,6 +52,16 @@ public class CurrentAccountDetails extends org.springframework.security.core.use
             }
         }
 
+    }
+
+    public Long getAccountId()
+    {
+        return this.accountId;
+    }
+
+    public void setAccountId(final Long accountId)
+    {
+        this.accountId = accountId;
     }
 
     public List<String> getPrivileges()

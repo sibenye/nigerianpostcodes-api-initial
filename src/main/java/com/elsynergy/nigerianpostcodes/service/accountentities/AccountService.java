@@ -205,6 +205,20 @@ public class AccountService
         return groupedIpAccessMap;
     }
 
+    public void updateRequestCount(final Long accountId)
+    {
+        final Account account = this.accountRepository.findOne(accountId);
+        final AccountSubscription accountSubscription = account.getAccountSubscription();
+
+        if (accountSubscription != null) {
+            final int numberOfRequestsMade = accountSubscription.getNumberOfRequestsMade();
+            accountSubscription.setNumberOfRequestsMade(numberOfRequestsMade + 1);
+
+            this.subscriptionRepository.save(accountSubscription);
+        }
+
+    }
+
     private void setSubscriptionDetails(final Account account, final Integer durationInMonths)
     {
         if (account.getAccountSubscription() == null) {
@@ -222,6 +236,7 @@ public class AccountService
 
         account.getAccountSubscription().setDurationInMonths(durationInMonths);
         account.getAccountSubscription().setNumberOfRequestsAllowed(numberOfAllowedRequests);
+        account.getAccountSubscription().setNumberOfRequestsMade(0);
         account.getAccountSubscription().setStartDate(startDate);
         account.getAccountSubscription().setEndDate(endDate);
         account.getAccountSubscription().setExpired(false);
