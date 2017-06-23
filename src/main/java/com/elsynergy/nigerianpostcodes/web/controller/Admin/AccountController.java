@@ -36,19 +36,19 @@ public class AccountController
 
     @ApiOperation(value = "Register new Account")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ApiResponse registerAccount(@Valid @ModelAttribute final RegisterAccountRequest request) throws ResourceNotFoundException {
+    public ApiResponse registerAccount(@Valid @RequestBody final RegisterAccountRequest request) throws ResourceNotFoundException {
         return new ApiResponse(this.accountService.registerAccount(request));
     }
 
     @ApiOperation(value = "Subscribe Account")
     @RequestMapping(value = "/subscribe", method = RequestMethod.POST)
-    public ApiResponse registerAccount(@Valid @ModelAttribute final AccountSubscribeRequest request) throws ResourceNotFoundException, BadRequestException {
+    public ApiResponse registerAccount(@Valid @RequestBody final AccountSubscribeRequest request) throws ResourceNotFoundException, BadRequestException {
         return new ApiResponse(this.accountService.subscribeAccount(request));
     }
 
     @ApiOperation(value = "Link ipAddresses for access to Account")
     @RequestMapping(value = "/ipAccess", method = RequestMethod.POST)
-    public ApiResponse linkAccountIpAccess(@Valid @ModelAttribute final AccountIpAccessRequest request) throws ResourceNotFoundException {
+    public ApiResponse linkAccountIpAccess(@Valid @RequestBody final AccountIpAccessRequest request) throws ResourceNotFoundException {
         this.accountService.linkIpAccess(request);
 
         return new ApiResponse(null);
