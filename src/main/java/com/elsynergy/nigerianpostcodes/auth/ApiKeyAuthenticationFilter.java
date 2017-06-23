@@ -99,9 +99,11 @@ public class ApiKeyAuthenticationFilter extends DigestAuthenticationFilter
         }
 
         // verify allowed ipAddresses
+        final String remoteAddr = request.getRemoteAddr();
+        final String host = request.getRemoteHost();
         if (!currentUserDetails.getAllowedIpAddresses().isEmpty()
                 && !currentUserDetails.getAllowedIpAddresses().contains(request.getRemoteAddr())) {
-            throw new AuthenticationServiceException("This client ip is NOT authorized to use this API Key.");
+            throw new AuthenticationServiceException("This client ip is NOT authorized to use this API Key. Expecting: " + request.getRemoteAddr());
         }
 
         // verify account subscription end date is in the future
