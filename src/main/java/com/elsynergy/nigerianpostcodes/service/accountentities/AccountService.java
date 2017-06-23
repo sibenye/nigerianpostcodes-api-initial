@@ -113,7 +113,7 @@ public class AccountService
     {
         final Account existingAccount = this.getVerifiedAccount(request.getAccountName());
 
-        final Optional<PackageType> requestedPackageType = this.packageRepository.findOneByName(request.getPackageName().toString());
+        final Optional<PackageType> requestedPackageType = this.packageRepository.findOneByName(request.getPackageName().name());
 
         if (!requestedPackageType.isPresent()) {
             throw new ResourceNotFoundException(String.format("PackageType with name '%s' not found.", request.getPackageName()));
@@ -227,7 +227,8 @@ public class AccountService
         }
 
         final Integer allowedMonthlyRequests = account.getPackageType().getAllowedMonthlyRequests();
-        final Integer numberOfAllowedRequests = allowedMonthlyRequests * durationInMonths;
+        final Integer numberOfAllowedRequests = allowedMonthlyRequests == null? null
+                : allowedMonthlyRequests * durationInMonths;
 
         final Calendar currentCalendar = this.dateTimeService.getCurrentDateAndTime();
         final Date startDate = currentCalendar.getTime();

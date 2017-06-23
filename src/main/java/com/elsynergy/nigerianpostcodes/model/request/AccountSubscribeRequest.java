@@ -4,6 +4,8 @@ import com.elsynergy.nigerianpostcodes.model.enums.PackageEnum;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -18,7 +20,7 @@ public class AccountSubscribeRequest
     private String accountName;
 
     @ApiParam(value = "Package Name", required = true)
-    @NotEmpty
+    @NotNull
     private PackageEnum packageName;
 
     @ApiParam(value = "Duration of Subscription in Months.", defaultValue="1", required = false)

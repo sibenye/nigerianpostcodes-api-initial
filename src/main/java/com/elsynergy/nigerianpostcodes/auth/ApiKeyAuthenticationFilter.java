@@ -112,7 +112,9 @@ public class ApiKeyAuthenticationFilter extends DigestAuthenticationFilter
         }
 
         // verify allowed request count has not been exceeded
-        if (currentUserDetails.getNumberOfRequestsMade() > currentUserDetails.getNumberOfRequestsAllowed()
+        if (currentUserDetails.getNumberOfRequestsMade()
+                > currentUserDetails.getNumberOfRequestsAllowed()
+                && !currentUserDetails.hasUnlimitedRequest()
                 && !this.accountIsAnException(currentUserDetails)) {
             throw new AuthenticationServiceException("This client has exceeded its request limit");
         }
