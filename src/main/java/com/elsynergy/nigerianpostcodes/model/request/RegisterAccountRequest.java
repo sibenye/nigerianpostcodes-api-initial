@@ -5,6 +5,8 @@ import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -19,7 +21,7 @@ public class RegisterAccountRequest
     private String accountName;
 
     @ApiParam(value = "Role", defaultValue="USER", required = true)
-    @NotEmpty
+    @NotNull
     private RoleEnum role = RoleEnum.USER;
 
     @ApiParam(value = "Package Name", required = false)
