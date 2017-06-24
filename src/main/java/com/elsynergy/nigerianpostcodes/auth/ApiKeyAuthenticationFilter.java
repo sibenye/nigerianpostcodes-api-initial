@@ -81,6 +81,9 @@ public class ApiKeyAuthenticationFilter extends DigestAuthenticationFilter
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
+        response.addHeader("FROM-C", request.getRemoteAddr());
+        response.addHeader("FROM-C2", request.getRemoteHost());
+
         chain.doFilter(request, response);
 
     }
@@ -103,7 +106,7 @@ public class ApiKeyAuthenticationFilter extends DigestAuthenticationFilter
         final String host = request.getRemoteHost();
         if (!currentUserDetails.getAllowedIpAddresses().isEmpty()
                 && !currentUserDetails.getAllowedIpAddresses().contains(request.getRemoteAddr())) {
-            throw new AuthenticationServiceException("This client ip is NOT authorized to use this API Key. Expecting: " + request.getRemoteAddr() + " or " + request.getRemoteHost());
+            throw new AuthenticationServiceException("This client ip: " + request.getRemoteAddr() + " is NOT authorized to use this API Key.");
         }
 
         // verify account subscription end date is in the future
