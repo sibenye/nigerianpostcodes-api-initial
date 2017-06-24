@@ -2,6 +2,7 @@ package com.elsynergy.nigerianpostcodes.config;
 
 import com.elsynergy.nigerianpostcodes.auth.ApiKeyAuthenticationFilter;
 import com.elsynergy.nigerianpostcodes.auth.CurrentUserDetailsService;
+import com.elsynergy.nigerianpostcodes.model.enums.RoleEnum;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -40,13 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             .antMatchers(HttpMethod.GET, "/swagger-resources").permitAll()
             .antMatchers(HttpMethod.GET, "/v2/api-docs").permitAll()
 
-            //.antMatchers(HttpMethod.GET, "/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
-            //.antMatchers(HttpMethod.POST, "/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
-            //.antMatchers(HttpMethod.DELETE, "/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
+            .antMatchers(HttpMethod.GET, "/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
+            .antMatchers(HttpMethod.POST, "/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
+            .antMatchers(HttpMethod.DELETE, "/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
 
-            //.antMatchers(HttpMethod.GET, "/**").hasAnyAuthority(RoleEnum.USER.toString(), RoleEnum.ADMIN.toString())
-            //.antMatchers(HttpMethod.POST, "/**").hasAnyAuthority(RoleEnum.USER.toString(), RoleEnum.ADMIN.toString())
-            //.antMatchers(HttpMethod.DELETE, "/**").hasAnyAuthority(RoleEnum.USER.toString(), RoleEnum.ADMIN.toString())
+            .antMatchers(HttpMethod.GET, "/**").hasAnyAuthority(RoleEnum.USER.toString(), RoleEnum.ADMIN.toString())
+            .antMatchers(HttpMethod.POST, "/**").hasAnyAuthority(RoleEnum.USER.toString(), RoleEnum.ADMIN.toString())
+            .antMatchers(HttpMethod.DELETE, "/**").hasAnyAuthority(RoleEnum.USER.toString(), RoleEnum.ADMIN.toString())
             // Defaults
             .anyRequest().authenticated()
             //.and().httpBasic()
