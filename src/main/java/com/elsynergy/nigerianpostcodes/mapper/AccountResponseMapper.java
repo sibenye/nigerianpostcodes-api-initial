@@ -14,6 +14,12 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Maps Account to AccountResponse.
+ *
+ * @author silver.ibenye
+ *
+ */
 @Component
 public class AccountResponseMapper implements IResponseMapper<Account, AccountResponse>
 {

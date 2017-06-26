@@ -32,7 +32,7 @@ public class Account extends Audit
     private Boolean active;
 
     @ManyToOne(optional=false)
-    @JoinColumn(name="roleid", nullable=false, updatable=false)
+    @JoinColumn(name="roleid", nullable=false)
     private Role role;
 
     @ManyToOne(optional=true)
