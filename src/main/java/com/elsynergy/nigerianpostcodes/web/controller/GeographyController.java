@@ -1,7 +1,6 @@
 package com.elsynergy.nigerianpostcodes.web.controller;
 
 import com.elsynergy.nigerianpostcodes.model.response.ApiResponse;
-import com.elsynergy.nigerianpostcodes.service.FindService;
 import com.elsynergy.nigerianpostcodes.service.geographyentities.GeographyService;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
@@ -22,9 +21,6 @@ import io.swagger.annotations.ApiOperation;
  */
 public class GeographyController
 {
-    @Autowired
-    private FindService findService;
-
     @Autowired
     private GeographyService geographyService;
 
