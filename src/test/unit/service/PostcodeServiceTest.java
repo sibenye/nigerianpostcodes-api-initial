@@ -8,9 +8,12 @@ import com.elsynergy.nigerianpostcodes.model.DAO.geograpghyentities.State;
 import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.FacilityPostcode;
 import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.RuralPostcode;
 import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.UrbanPostcode;
-import com.elsynergy.nigerianpostcodes.repo.postcodeentities.FacilityPostcodeRepository;
-import com.elsynergy.nigerianpostcodes.repo.postcodeentities.RuralPostcodeRepository;
-import com.elsynergy.nigerianpostcodes.repo.postcodeentities.UrbanPostcodeRepository;
+import com.elsynergy.nigerianpostcodes.model.request.FacilityPostcodeRequest;
+import com.elsynergy.nigerianpostcodes.model.request.RuralPostcodeRequest;
+import com.elsynergy.nigerianpostcodes.model.request.UrbanPostcodeRequest;
+import com.elsynergy.nigerianpostcodes.repo.postcodeentities.FacilityPostcodeRepositoryCustom;
+import com.elsynergy.nigerianpostcodes.repo.postcodeentities.RuralPostcodeRepositoryCustom;
+import com.elsynergy.nigerianpostcodes.repo.postcodeentities.UrbanPostcodeRepositoryCustom;
 import com.elsynergy.nigerianpostcodes.service.postcodeentities.PostcodeService;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
 
@@ -36,13 +39,13 @@ import static org.mockito.Mockito.when;
 public class PostcodeServiceTest
 {
     @Mock
-    private FacilityPostcodeRepository facilityPostcodeRepository;
+    private FacilityPostcodeRepositoryCustom facilityPostcodeRepository;
 
     @Mock
-    private RuralPostcodeRepository ruralPostcodeRepository;
+    private RuralPostcodeRepositoryCustom ruralPostcodeRepository;
 
     @Mock
-    private UrbanPostcodeRepository urbanPostcodeRepository;
+    private UrbanPostcodeRepositoryCustom urbanPostcodeRepository;
 
     @Mock
     private FacilityPostcodeResponseMapper facilityPostcodeResponseMapper;
@@ -61,6 +64,12 @@ public class PostcodeServiceTest
     private RuralPostcode ruralPostcode;
 
     private UrbanPostcode urbanPostcode;
+
+    private FacilityPostcodeRequest facilityPostcodeRequest;
+
+    private RuralPostcodeRequest ruralPostcodeRequest;
+
+    private UrbanPostcodeRequest urbanPostcodeRequest;
 
     @Before
     public void setup()
@@ -95,7 +104,22 @@ public class PostcodeServiceTest
         this.urbanPostcode.setArea("testArea");
         this.urbanPostcode.setState(state);
 
+        this.facilityPostcodeRequest = new FacilityPostcodeRequest();
+        this.facilityPostcodeRequest.setStateCode("AB");
+        this.facilityPostcodeRequest.setLocalGovtAreaName("testLga");
+        this.facilityPostcodeRequest.setFacilityName("testFacility");
 
+        this.ruralPostcodeRequest = new RuralPostcodeRequest();
+        this.ruralPostcodeRequest.setStateCode("AB");
+        this.ruralPostcodeRequest.setLocalGovtAreaName("testLga");
+        this.ruralPostcodeRequest.setDistrict("testDistrict");
+        this.ruralPostcodeRequest.setTown("testTown");
+
+        this.urbanPostcodeRequest = new UrbanPostcodeRequest();
+        this.urbanPostcodeRequest.setStateCode("AB");
+        this.urbanPostcodeRequest.setArea("testArea");
+        this.urbanPostcodeRequest.setTown("testTown");
+        this.urbanPostcodeRequest.setStreet("testStreet");
     }
 
     @Test
@@ -103,12 +127,12 @@ public class PostcodeServiceTest
     {
         final List<FacilityPostcode> facilityPostcodes = Arrays.asList(this.facilityPostcode);
 
-        when(this.facilityPostcodeRepository.findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaNameAndFacility(
+        when(this.facilityPostcodeRepository.getFacilityPostcodes(
                 anyString(), anyString(), anyString())).thenReturn(facilityPostcodes);
 
-        this.postcodeService.getFacilityPostcodes("AB", "testLgs", "testFacility");
+        this.postcodeService.getFacilityPostcodes(this.facilityPostcodeRequest);
 
-        verify(this.facilityPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaNameAndFacility(
+        verify(this.facilityPostcodeRepository, times(1)).getFacilityPostcodes(
                 anyString(), anyString(), anyString());
 
         verify(this.facilityPostcodeResponseMapper, atLeastOnce()).map(any(FacilityPostcode.class));
@@ -119,13 +143,15 @@ public class PostcodeServiceTest
     {
         final List<FacilityPostcode> facilityPostcodes = Arrays.asList(this.facilityPostcode);
 
-        when(this.facilityPostcodeRepository.findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaName(
-                anyString(), anyString())).thenReturn(facilityPostcodes);
+        when(this.facilityPostcodeRepository.getFacilityPostcodes(
+                anyString(), anyString(), anyString())).thenReturn(facilityPostcodes);
 
-        this.postcodeService.getFacilityPostcodes("AB", "testLgs", null);
+        this.facilityPostcodeRequest.setFacilityName(null);
 
-        verify(this.facilityPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaName(
-                anyString(), anyString());
+        this.postcodeService.getFacilityPostcodes(this.facilityPostcodeRequest);
+
+        verify(this.facilityPostcodeRepository, times(1)).getFacilityPostcodes(
+                anyString(), anyString(), anyString());
 
         verify(this.facilityPostcodeResponseMapper, atLeastOnce()).map(any(FacilityPostcode.class));
     }
@@ -135,13 +161,16 @@ public class PostcodeServiceTest
     {
         final List<FacilityPostcode> facilityPostcodes = Arrays.asList(this.facilityPostcode);
 
-        when(this.facilityPostcodeRepository.findByLocalGovernmentAreaStateCode(
-                anyString())).thenReturn(facilityPostcodes);
+        when(this.facilityPostcodeRepository.getFacilityPostcodes(
+                anyString(), anyString(), anyString())).thenReturn(facilityPostcodes);
 
-        this.postcodeService.getFacilityPostcodes("AB", null, null);
+        this.facilityPostcodeRequest.setFacilityName(null);
+        this.facilityPostcodeRequest.setLocalGovtAreaName(null);
 
-        verify(this.facilityPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCode(
-                anyString());
+        this.postcodeService.getFacilityPostcodes(this.facilityPostcodeRequest);
+
+        verify(this.facilityPostcodeRepository, times(1)).getFacilityPostcodes(
+                anyString(), anyString(), anyString());
 
         verify(this.facilityPostcodeResponseMapper, atLeastOnce()).map(any(FacilityPostcode.class));
     }
@@ -152,13 +181,13 @@ public class PostcodeServiceTest
     {
         final List<FacilityPostcode> facilityPostcodes = new ArrayList<>();
 
-        when(this.facilityPostcodeRepository.findByLocalGovernmentAreaStateCode(
-                anyString())).thenReturn(facilityPostcodes);
+        when(this.facilityPostcodeRepository.getFacilityPostcodes(
+                anyString(), anyString(), anyString())).thenReturn(facilityPostcodes);
 
-        this.postcodeService.getFacilityPostcodes("AB", null, null);
+        this.postcodeService.getFacilityPostcodes(this.facilityPostcodeRequest);
 
-        verify(this.facilityPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCode(
-                anyString());
+        verify(this.facilityPostcodeRepository, times(1)).getFacilityPostcodes(
+                anyString(), anyString(), anyString());
 
         verify(this.facilityPostcodeResponseMapper, times(0)).map(any(FacilityPostcode.class));
     }
@@ -166,24 +195,14 @@ public class PostcodeServiceTest
     @Test
     public void testGetRuralPostcodesWithStateCodeAndLgaNameAndDistrictAndTown() throws ResourceNotFoundException
     {
-        final State state = new State();
-        state.setCode("AB");
-        state.setName("Abia");
-
-        final LocalGovernmentArea localGovernmentArea = new LocalGovernmentArea();
-        localGovernmentArea.setId(1);
-        localGovernmentArea.setName("testLga");
-        localGovernmentArea.setState(state);
-
-
         final List<RuralPostcode> ruralPostcodes = Arrays.asList(this.ruralPostcode);
 
-        when(this.ruralPostcodeRepository.findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaNameAndDistrictAndTown(
+        when(this.ruralPostcodeRepository.getRuralPostcodes(
                 anyString(), anyString(), anyString(), anyString())).thenReturn(ruralPostcodes);
 
-        this.postcodeService.getRuralPostcodes("AB", "testLgs", "testDistrict", "testTown");
+        this.postcodeService.getRuralPostcodes(this.ruralPostcodeRequest);
 
-        verify(this.ruralPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaNameAndDistrictAndTown(
+        verify(this.ruralPostcodeRepository, times(1)).getRuralPostcodes(
                 anyString(), anyString(), anyString(), anyString());
 
         verify(this.ruralPostcodeResponseMapper, atLeastOnce()).map(any(RuralPostcode.class));
@@ -194,13 +213,15 @@ public class PostcodeServiceTest
     {
         final List<RuralPostcode> ruralPostcodes = Arrays.asList(this.ruralPostcode);
 
-        when(this.ruralPostcodeRepository.findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaNameAndDistrict(
-                anyString(), anyString(), anyString())).thenReturn(ruralPostcodes);
+        when(this.ruralPostcodeRepository.getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString())).thenReturn(ruralPostcodes);
 
-        this.postcodeService.getRuralPostcodes("AB", "testLgs", "testDistrict", null);
+        this.ruralPostcodeRequest.setTown(null);
 
-        verify(this.ruralPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaNameAndDistrict(
-                anyString(), anyString(), anyString());
+        this.postcodeService.getRuralPostcodes(this.ruralPostcodeRequest);
+
+        verify(this.ruralPostcodeRepository, times(1)).getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.ruralPostcodeResponseMapper, atLeastOnce()).map(any(RuralPostcode.class));
     }
@@ -210,13 +231,16 @@ public class PostcodeServiceTest
     {
         final List<RuralPostcode> ruralPostcodes = Arrays.asList(this.ruralPostcode);
 
-        when(this.ruralPostcodeRepository.findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaName(
-                anyString(), anyString())).thenReturn(ruralPostcodes);
+        when(this.ruralPostcodeRepository.getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString())).thenReturn(ruralPostcodes);
 
-        this.postcodeService.getRuralPostcodes("AB", "testLgs", null, null);
+        this.ruralPostcodeRequest.setTown(null);
+        this.ruralPostcodeRequest.setDistrict(null);
 
-        verify(this.ruralPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCodeAndLocalGovernmentAreaName(
-                anyString(), anyString());
+        this.postcodeService.getRuralPostcodes(this.ruralPostcodeRequest);
+
+        verify(this.ruralPostcodeRepository, times(1)).getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.ruralPostcodeResponseMapper, atLeastOnce()).map(any(RuralPostcode.class));
     }
@@ -226,13 +250,17 @@ public class PostcodeServiceTest
     {
         final List<RuralPostcode> ruralPostcodes = Arrays.asList(this.ruralPostcode);
 
-        when(this.ruralPostcodeRepository.findByLocalGovernmentAreaStateCode(
-                anyString())).thenReturn(ruralPostcodes);
+        when(this.ruralPostcodeRepository.getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString())).thenReturn(ruralPostcodes);
 
-        this.postcodeService.getRuralPostcodes("AB", null, null, null);
+        this.ruralPostcodeRequest.setTown(null);
+        this.ruralPostcodeRequest.setDistrict(null);
+        this.ruralPostcodeRequest.setLocalGovtAreaName(null);
 
-        verify(this.ruralPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCode(
-                anyString());
+        this.postcodeService.getRuralPostcodes(this.ruralPostcodeRequest);
+
+        verify(this.ruralPostcodeRepository, times(1)).getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.ruralPostcodeResponseMapper, atLeastOnce()).map(any(RuralPostcode.class));
     }
@@ -242,13 +270,13 @@ public class PostcodeServiceTest
     {
         final List<RuralPostcode> ruralPostcodes = new ArrayList<>();
 
-        when(this.ruralPostcodeRepository.findByLocalGovernmentAreaStateCode(
-                anyString())).thenReturn(ruralPostcodes);
+        when(this.ruralPostcodeRepository.getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString())).thenReturn(ruralPostcodes);
 
-        this.postcodeService.getRuralPostcodes("AB", null, null, null);
+        this.postcodeService.getRuralPostcodes(this.ruralPostcodeRequest);
 
-        verify(this.ruralPostcodeRepository, times(1)).findByLocalGovernmentAreaStateCode(
-                anyString());
+        verify(this.ruralPostcodeRepository, times(1)).getRuralPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.ruralPostcodeResponseMapper, times(0)).map(any(RuralPostcode.class));
     }
@@ -258,13 +286,13 @@ public class PostcodeServiceTest
     {
         final List<UrbanPostcode> urbanPostcodes = Arrays.asList(this.urbanPostcode);
 
-        when(this.urbanPostcodeRepository.findByStateCodeAndTownAndAreaAndStreet(
+        when(this.urbanPostcodeRepository.getUrbanPostcodes(
                 anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(urbanPostcodes);
 
-        this.postcodeService.getUrbanPostcodes("AB", "testTown", "testArea", "testStreet");
+        this.postcodeService.getUrbanPostcodes(this.urbanPostcodeRequest);
 
-        verify(this.urbanPostcodeRepository, times(1)).findByStateCodeAndTownAndAreaAndStreet(
+        verify(this.urbanPostcodeRepository, times(1)).getUrbanPostcodes(
                 anyString(), anyString(), anyString(), anyString());
 
         verify(this.urbanPostcodeResponseMapper, atLeastOnce()).map(any(UrbanPostcode.class));
@@ -275,14 +303,16 @@ public class PostcodeServiceTest
     {
         final List<UrbanPostcode> urbanPostcodes = Arrays.asList(this.urbanPostcode);
 
-        when(this.urbanPostcodeRepository.findByStateCodeAndTownAndArea(
-                anyString(), anyString(), anyString()))
+        when(this.urbanPostcodeRepository.getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(urbanPostcodes);
 
-        this.postcodeService.getUrbanPostcodes("AB", "testTown", "testArea", null);
+        this.urbanPostcodeRequest.setStreet(null);
 
-        verify(this.urbanPostcodeRepository, times(1)).findByStateCodeAndTownAndArea(
-                anyString(), anyString(), anyString());
+        this.postcodeService.getUrbanPostcodes(this.urbanPostcodeRequest);
+
+        verify(this.urbanPostcodeRepository, times(1)).getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.urbanPostcodeResponseMapper, atLeastOnce()).map(any(UrbanPostcode.class));
     }
@@ -292,14 +322,17 @@ public class PostcodeServiceTest
     {
         final List<UrbanPostcode> urbanPostcodes = Arrays.asList(this.urbanPostcode);
 
-        when(this.urbanPostcodeRepository.findByStateCodeAndTown(
-                anyString(), anyString()))
+        when(this.urbanPostcodeRepository.getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(urbanPostcodes);
 
-        this.postcodeService.getUrbanPostcodes("AB", "testTown", null, null);
+        this.urbanPostcodeRequest.setStreet(null);
+        this.urbanPostcodeRequest.setArea(null);
 
-        verify(this.urbanPostcodeRepository, times(1)).findByStateCodeAndTown(
-                anyString(), anyString());
+        this.postcodeService.getUrbanPostcodes(this.urbanPostcodeRequest);
+
+        verify(this.urbanPostcodeRepository, times(1)).getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.urbanPostcodeResponseMapper, atLeastOnce()).map(any(UrbanPostcode.class));
     }
@@ -309,14 +342,18 @@ public class PostcodeServiceTest
     {
         final List<UrbanPostcode> urbanPostcodes = Arrays.asList(this.urbanPostcode);
 
-        when(this.urbanPostcodeRepository.findByStateCode(
-                anyString()))
+        when(this.urbanPostcodeRepository.getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(urbanPostcodes);
 
-        this.postcodeService.getUrbanPostcodes("AB", null, null, null);
+        this.urbanPostcodeRequest.setStreet(null);
+        this.urbanPostcodeRequest.setArea(null);
+        this.urbanPostcodeRequest.setTown(null);
 
-        verify(this.urbanPostcodeRepository, times(1)).findByStateCode(
-                anyString());
+        this.postcodeService.getUrbanPostcodes(this.urbanPostcodeRequest);
+
+        verify(this.urbanPostcodeRepository, times(1)).getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.urbanPostcodeResponseMapper, atLeastOnce()).map(any(UrbanPostcode.class));
     }
@@ -326,14 +363,14 @@ public class PostcodeServiceTest
     {
         final List<UrbanPostcode> urbanPostcodes = new ArrayList<>();
 
-        when(this.urbanPostcodeRepository.findByStateCode(
-                anyString()))
+        when(this.urbanPostcodeRepository.getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(urbanPostcodes);
 
-        this.postcodeService.getUrbanPostcodes("AB", null, null, null);
+        this.postcodeService.getUrbanPostcodes(this.urbanPostcodeRequest);
 
-        verify(this.urbanPostcodeRepository, times(1)).findByStateCode(
-                anyString());
+        verify(this.urbanPostcodeRepository, times(1)).getUrbanPostcodes(
+                anyString(), anyString(), anyString(), anyString());
 
         verify(this.urbanPostcodeResponseMapper, times(0)).map(any(UrbanPostcode.class));
     }

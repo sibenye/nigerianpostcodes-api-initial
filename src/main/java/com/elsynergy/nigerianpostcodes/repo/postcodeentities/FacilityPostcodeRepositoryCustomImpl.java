@@ -3,11 +3,10 @@ package com.elsynergy.nigerianpostcodes.repo.postcodeentities;
 import com.elsynergy.nigerianpostcodes.model.DAO.geograpghyentities.LocalGovernmentArea;
 import com.elsynergy.nigerianpostcodes.model.DAO.geograpghyentities.State;
 import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.FacilityPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.RuralPostcode;
-import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.UrbanPostcode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +16,17 @@ import java.util.List;
  * @author silver.ibenye
  *
  */
-public class PostcodeRepositoryCustomImpl implements PostcodeRepositoryCustom
+@Repository
+public class FacilityPostcodeRepositoryCustomImpl implements FacilityPostcodeRepositoryCustom
 {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<FacilityPostcode> getFacilityPostcode(final String stateCode, final String localGovtAreaName, final String facilityName)
+    public List<FacilityPostcode> getFacilityPostcodes(final String stateCode, final String localGovtAreaName, final String facilityName)
     {
         final String query = "SELECT " +
-                            "s.id AS stateId" +
+                            "s.id AS stateId, " +
                             "s.name AS stateName, " +
                             "s.code AS stateCode, " +
                             "l.id AS lgaId, " +
@@ -47,9 +47,9 @@ public class PostcodeRepositoryCustomImpl implements PostcodeRepositoryCustom
                         "AND " +
                             "fp.facility = COALESCE(?, fp.facility)";
 
-        List<FacilityPostcode> ruralPostcodes = new ArrayList<>();
+        List<FacilityPostcode> facilityPostcodes = new ArrayList<>();
 
-        ruralPostcodes = this.jdbcTemplate.query(
+        facilityPostcodes = this.jdbcTemplate.query(
                 query,
                 new Object[] { stateCode, localGovtAreaName, facilityName }, (rs, rowNum) -> {
                     final FacilityPostcode facilityPostcode = new FacilityPostcode();
@@ -71,22 +71,7 @@ public class PostcodeRepositoryCustomImpl implements PostcodeRepositoryCustom
 
             return facilityPostcode;
         });
-        return null;
-    }
-
-    @Override
-    public List<RuralPostcode> getRuralPostcode(final String stateCode, final String localGovtAreaName, final String district,
-            final String town)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<UrbanPostcode> getUrbanPostcode(final String stateCode, final String town, final String area, final String street)
-    {
-        // TODO Auto-generated method stub
-        return null;
+        return facilityPostcodes;
     }
 
 }

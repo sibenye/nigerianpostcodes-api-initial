@@ -1,5 +1,8 @@
 package com.elsynergy.nigerianpostcodes.web.controller;
 
+import com.elsynergy.nigerianpostcodes.model.request.FacilityPostcodeRequest;
+import com.elsynergy.nigerianpostcodes.model.request.RuralPostcodeRequest;
+import com.elsynergy.nigerianpostcodes.model.request.UrbanPostcodeRequest;
 import com.elsynergy.nigerianpostcodes.model.response.ApiResponse;
 import com.elsynergy.nigerianpostcodes.service.postcodeentities.PostcodeService;
 import com.elsynergy.nigerianpostcodes.web.exception.ResourceNotFoundException;
@@ -25,39 +28,31 @@ public class PostcodeController
     private PostcodeService postcodeService;
 
     @ApiOperation(value = "Retrieve Rural Postcodes.")
-    @RequestMapping(method = RequestMethod.GET, value = "/rural-postcodes/{stateCode}")
+    @RequestMapping(method = RequestMethod.GET, value = "/rural-postcodes")
     public @ResponseBody ApiResponse getRuralPostcodes(
-            @Valid @PathVariable final String stateCode,
-            @Valid @RequestParam ( required = false ) final String localGovtAreaName,
-            @Valid @RequestParam ( required = false ) final String district,
-            @Valid @RequestParam ( required = false ) final String town
+            @Valid @ModelAttribute final RuralPostcodeRequest request
             ) throws ResourceNotFoundException
     {
-        return new ApiResponse(this.postcodeService.getRuralPostcodes(stateCode, localGovtAreaName, district, town));
+        return new ApiResponse(this.postcodeService.getRuralPostcodes(request));
     }
 
 
     @ApiOperation(value = "Retrieve Urban Postcodes.")
-    @RequestMapping(method = RequestMethod.GET, value = "/urban-postcodes/{stateCode}")
+    @RequestMapping(method = RequestMethod.GET, value = "/urban-postcodes")
     public @ResponseBody ApiResponse getUrbanPostcodes(
-            @Valid @PathVariable final String stateCode,
-            @Valid @RequestParam ( required = false ) final String town,
-            @Valid @RequestParam ( required = false ) final String area,
-            @Valid @RequestParam  ( required = false ) final String street
+            @Valid @ModelAttribute final UrbanPostcodeRequest request
             ) throws ResourceNotFoundException
     {
-        return new ApiResponse(this.postcodeService.getUrbanPostcodes(stateCode, town, area, street));
+        return new ApiResponse(this.postcodeService.getUrbanPostcodes(request));
     }
 
     @ApiOperation(value = "Retrieve Facility Postcodes.")
-    @RequestMapping(method = RequestMethod.GET, value = "/facility-postcodes/{stateCode}")
+    @RequestMapping(method = RequestMethod.GET, value = "/facility-postcodes")
     public @ResponseBody ApiResponse getFacilityPostcodes(
-            @Valid @PathVariable final String stateCode,
-            @Valid @RequestParam ( required = false ) final String localGovtAreaName,
-            @Valid @RequestParam ( required = false ) final String facilityName
+            @Valid @ModelAttribute final FacilityPostcodeRequest request
             ) throws ResourceNotFoundException
     {
-        return new ApiResponse(this.postcodeService.getFacilityPostcodes(stateCode, localGovtAreaName, facilityName));
+        return new ApiResponse(this.postcodeService.getFacilityPostcodes(request));
     }
 
 }
