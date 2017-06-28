@@ -12,6 +12,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ *
+ * @author silver.ibenye
+ *
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class LocalGovernmentAreaResponseMapperTest
 {

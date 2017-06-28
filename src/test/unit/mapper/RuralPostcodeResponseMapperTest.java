@@ -7,11 +7,18 @@ import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.RuralPostcode;
 import com.elsynergy.nigerianpostcodes.model.response.RuralPostcodeResponse;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
+/**
+ *
+ * @author silver.ibenye
+ *
+ */
+@RunWith(MockitoJUnitRunner.class)
 public class RuralPostcodeResponseMapperTest
 {
     @InjectMocks

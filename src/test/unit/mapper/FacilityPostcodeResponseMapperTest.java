@@ -7,7 +7,9 @@ import com.elsynergy.nigerianpostcodes.model.DAO.postcodeentities.FacilityPostco
 import com.elsynergy.nigerianpostcodes.model.response.FacilityPostcodeResponse;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @author silver.ibenye
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class FacilityPostcodeResponseMapperTest
 {
     @InjectMocks
